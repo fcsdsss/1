@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bypass API</title>
+</head>
+<body>
+    <h2>Bypass URL</h2>
+    <input type="text" id="urlInput" placeholder="Enter URL here">
+    <br><br>
+    <button onclick="bypassUrl()">Bypass</button>
+    <br><br>
+    <textarea id="output" rows="5" cols="50" readonly placeholder="API response will appear here..."></textarea>
+
+    <script>
+    function bypassUrl() {
+        const url = document.getElementById('urlInput').value;
+        if (url) {
+            const apiUrl = `https://iwoozie.baby/api/free/bypass?url=${encodeURIComponent(url)}`;
+            fetch(apiUrl)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('output').value = data;
+                })
+                .catch(error => {
+                    document.getElementById('output').value = 'An error occurred: ' + error.message;
+                });
+        } else {
+            document.getElementById('output').value = 'Please enter a URL';
+        }
+    }
+    </script>
+</body>
+</html>
