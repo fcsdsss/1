@@ -99,7 +99,8 @@
             <button onclick="bypassUrl()">绕过</button>
             <button onclick="clearFields()">清空</button>
             <button onclick="navigateToResponse()">转到响应</button>
-            <button onclick="copyOutput()">复制</button> <!-- 新增复制按钮 -->
+            <button onclick="copyOutput()">复制</button>
+            <button onclick="pasteFromClipboard()">粘贴</button> <!-- 新增粘贴按钮 -->
         </div>
         <textarea id="output" rows="5" cols="50" readonly placeholder="绕过后的 URL 将显示在此处..."></textarea>
         
@@ -187,6 +188,16 @@
                     });
             } else {
                 alert('没有可复制的 URL，请先点击“绕过”按钮。');
+            }
+        }
+
+        // 新增粘贴函数
+        async function pasteFromClipboard() {
+            try {
+                const text = await navigator.clipboard.readText(); // 读取剪切板内容
+                document.getElementById('urlInput').value = text; // 将内容粘贴到输入框
+            } catch (error) {
+                alert('无法读取剪切板内容，请手动粘贴。');
             }
         }
 
