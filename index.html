@@ -113,10 +113,29 @@
     </div>
 
     <script>
-        function bypassUrl() {
+        async function bypassUrl() {
             const urlInput = document.getElementById('urlInput').value;
             const output = document.getElementById('output');
-            output.value = `正在绕过 URL: ${urlInput}`;
+
+            if (!urlInput) {
+                alert('请先输入一个 URL。');
+                return;
+            }
+
+            try {
+                // 调用 API
+                const apiUrl = `https://iwoozie.baby/api/free/bypass?url=${encodeURIComponent(urlInput)}`;
+                const response = await fetch(apiUrl);
+
+                if (!response.ok) {
+                    throw new Error(`API 请求失败: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                output.value = JSON.stringify(data, null, 2); // 格式化显示 JSON 数据
+            } catch (error) {
+                output.value = `错误: ${error.message}`;
+            }
         }
 
         function clearFields() {
