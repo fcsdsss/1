@@ -4,13 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bypass API</title>
+    <style>
+        .button-group {
+            margin: 10px 0;
+            gap: 10px;
+            display: flex;
+        }
+    </style>
 </head>
 <body>
     <h2>Bypass URL</h2>
     <input type="text" id="urlInput" placeholder="Enter URL here">
-    <br><br>
-    <button onclick="bypassUrl()">Bypass</button>
-    <br><br>
+    <div class="button-group">
+        <button onclick="bypassUrl()">Bypass</button>
+        <button onclick="clearFields()">Clear</button>
+        <button onclick="navigateToResponse()">Go to Response</button>
+    </div>
     <textarea id="output" rows="5" cols="50" readonly placeholder="API response will appear here..."></textarea>
 
     <script>
@@ -28,6 +37,28 @@
                 });
         } else {
             document.getElementById('output').value = 'Please enter a URL';
+        }
+    }
+
+    // 新增清除功能
+    function clearFields() {
+        document.getElementById('urlInput').value = '';
+        document.getElementById('output').value = '';
+    }
+
+    // 新增跳转功能
+    function navigateToResponse() {
+        const responseUrl = document.getElementById('output').value.trim();
+        if (responseUrl) {
+            try {
+                // 确保是有效的URL
+                new URL(responseUrl);
+                window.location.href = responseUrl;
+            } catch {
+                alert('Invalid URL in response');
+            }
+        } else {
+            alert('Please get a response first');
         }
     }
     </script>
