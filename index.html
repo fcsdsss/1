@@ -144,11 +144,20 @@
         }
 
         function navigateToResponse() {
-            const urlInput = document.getElementById('urlInput').value;
-            if (urlInput) {
-                window.open(urlInput, '_blank');
-            } else {
-                alert('请先输入一个 URL。');
+            const output = document.getElementById('output').value;
+
+            try {
+                // 解析 API 返回的 JSON 数据
+                const response = JSON.parse(output);
+
+                // 假设 API 返回的数据中有一个字段叫 "bypassedUrl"
+                if (response.bypassedUrl) {
+                    window.open(response.bypassedUrl, '_blank'); // 在新标签页中打开绕过后的 URL
+                } else {
+                    alert('未找到绕过后的 URL。');
+                }
+            } catch (error) {
+                alert('无法解析 API 响应，请先点击“绕过”按钮。');
             }
         }
     </script>
