@@ -94,6 +94,7 @@
             <button onclick="bypassUrl()">绕过</button>
             <button onclick="clearFields()">清空</button>
             <button onclick="navigateToResponse()">转到响应</button>
+            <button onclick="copyOutput()">复制</button> <!-- 新增复制按钮 -->
         </div>
         <textarea id="output" rows="5" cols="50" readonly placeholder="绕过后的 URL 将显示在此处..."></textarea>
     </div>
@@ -159,6 +160,22 @@
                 window.open(output, '_blank'); // 在新标签页中打开 URL
             } else {
                 alert('未找到有效的 URL，请先点击“绕过”按钮。');
+            }
+        }
+
+        function copyOutput() {
+            const output = document.getElementById('output').value;
+
+            if (output && output.startsWith('http')) {
+                navigator.clipboard.writeText(output)
+                    .then(() => {
+                        alert('URL 已复制到剪贴板！');
+                    })
+                    .catch(() => {
+                        alert('复制失败，请手动复制。');
+                    });
+            } else {
+                alert('没有可复制的 URL，请先点击“绕过”按钮。');
             }
         }
     </script>
