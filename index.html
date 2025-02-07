@@ -47,34 +47,31 @@
             justify-content: center;
         }
 
-        /* 更新后的按钮样式 */
         button {
             padding: 15px 30px;
             font-size: 1.1em;
-            background: #555; /* 背景色改为灰色 */
-            color: #fff; /* 文字颜色保持白色 */
-            border: 2px solid #777; /* 边框改为深灰色 */
-            border-radius: 10px; /* 圆角效果 */
+            background: #555;
+            color: #fff;
+            border: 2px solid #777;
+            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.2s ease; /* 添加过渡效果 */
+            transition: all 0.2s ease;
             position: relative;
-            box-shadow: 0 0 8px rgba(119, 119, 119, 0.3); /* 调整阴影颜色 */
+            box-shadow: 0 0 8px rgba(119, 119, 119, 0.3);
         }
 
         button:hover {
-            background: #777; /* 鼠标悬停时背景色变为浅灰色 */
-            border-color: #999; /* 边框颜色变为更浅的灰色 */
-            box-shadow: 0 0 12px rgba(153, 153, 153, 0.5); /* 调整阴影颜色 */
+            background: #777;
+            border-color: #999;
+            box-shadow: 0 0 12px rgba(153, 153, 153, 0.5);
         }
 
-        /* 点击时的动态效果 */
         button:active {
-            transform: scale(0.95); /* 点击时按钮缩小 */
-            background: #444; /* 点击时背景色变深 */
-            box-shadow: 0 0 6px rgba(119, 119, 119, 0.5); /* 点击时阴影变化 */
+            transform: scale(0.95);
+            background: #444;
+            box-shadow: 0 0 6px rgba(119, 119, 119, 0.5);
         }
 
-        /* 新增尺寸指示线 */
         button::after {
             content: '';
             position: absolute;
@@ -82,8 +79,8 @@
             left: -4px;
             right: -4px;
             bottom: -4px;
-            border: 1px solid rgba(119, 119, 119, 0.3); /* 调整指示线颜色 */
-            border-radius: 12px; /* 圆角效果 */
+            border: 1px solid rgba(119, 119, 119, 0.3);
+            border-radius: 12px;
             pointer-events: none;
         }
 
@@ -132,6 +129,7 @@
                 }
 
                 const data = await response.json();
+                console.log('API 返回的数据:', data); // 调试：打印 API 返回的数据
                 output.value = JSON.stringify(data, null, 2); // 格式化显示 JSON 数据
             } catch (error) {
                 output.value = `错误: ${error.message}`;
@@ -149,16 +147,34 @@
             try {
                 // 解析 API 返回的 JSON 数据
                 const response = JSON.parse(output);
+                console.log('解析后的数据:', response); // 调试：打印解析后的数据
 
-                // 假设 API 返回的数据中有一个字段叫 "url"
-                if (response.url) {
-                    window.open(response.url, '_blank'); // 在新标签页中打开绕过后的 URL
+                // 查找 URL 字段
+                const url = findUrlInResponse(response);
+                if (url) {
+                    window.open(url, '_blank'); // 在新标签页中打开 URL
                 } else {
-                    alert('未找到绕过后的 URL。');
+                    alert('未找到绕过后的 URL。请检查 API 返回的数据结构。');
                 }
             } catch (error) {
                 alert('无法解析 API 响应，请先点击“绕过”按钮。');
             }
+        }
+
+        function findUrlInResponse(data) {
+            // 递归查找 URL 字段
+            if (typeof data === 'object' && data !== null) {
+                for (const key in data) {
+                    if (key.toLowerCase().includes('url') && typeof data[key] === 'string' && data[key].startsWith('http')) {
+                        return data[key]; // 返回找到的 URL
+                    }
+                    if (typeof data[key] === 'object') {
+                        const result = findUrlInResponse(data[key]); // 递归查找
+                        if (result) return result;
+                    }
+                }
+            }
+            return null; // 未找到 URL
         }
     </script>
 </body>
