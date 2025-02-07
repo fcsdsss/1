@@ -47,34 +47,31 @@
             justify-content: center;
         }
 
-        /* 更新后的按钮样式 */
         button {
             padding: 15px 30px;
             font-size: 1.1em;
-            background: #555; /* 背景色改为灰色 */
-            color: #fff; /* 文字颜色保持白色 */
-            border: 2px solid #777; /* 边框改为深灰色 */
-            border-radius: 10px; /* 圆角效果 */
+            background: #555;
+            color: #fff;
+            border: 2px solid #777;
+            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.2s ease; /* 添加过渡效果 */
+            transition: all 0.2s ease;
             position: relative;
-            box-shadow: 0 0 8px rgba(119, 119, 119, 0.3); /* 调整阴影颜色 */
+            box-shadow: 0 0 8px rgba(119, 119, 119, 0.3);
         }
 
         button:hover {
-            background: #777; /* 鼠标悬停时背景色变为浅灰色 */
-            border-color: #999; /* 边框颜色变为更浅的灰色 */
-            box-shadow: 0 0 12px rgba(153, 153, 153, 0.5); /* 调整阴影颜色 */
+            background: #777;
+            border-color: #999;
+            box-shadow: 0 0 12px rgba(153, 153, 153, 0.5);
         }
 
-        /* 点击时的动态效果 */
         button:active {
-            transform: scale(0.95); /* 点击时按钮缩小 */
-            background: #444; /* 点击时背景色变深 */
-            box-shadow: 0 0 6px rgba(119, 119, 119, 0.5); /* 点击时阴影变化 */
+            transform: scale(0.95);
+            background: #444;
+            box-shadow: 0 0 6px rgba(119, 119, 119, 0.5);
         }
 
-        /* 新增尺寸指示线 */
         button::after {
             content: '';
             position: absolute;
@@ -82,8 +79,8 @@
             left: -4px;
             right: -4px;
             bottom: -4px;
-            border: 1px solid rgba(119, 119, 119, 0.3); /* 调整指示线颜色 */
-            border-radius: 12px; /* 圆角效果 */
+            border: 1px solid rgba(119, 119, 119, 0.3);
+            border-radius: 12px;
             pointer-events: none;
         }
 
@@ -132,12 +129,13 @@
                 }
 
                 const data = await response.json();
+                console.log('API 返回的数据:', data); // 调试：打印 API 返回的数据
 
                 // 假设 API 返回的 URL 在 "url" 字段中
                 if (data.url) {
                     output.value = data.url; // 只显示 URL
                 } else {
-                    throw new Error('未找到绕过后的 URL。');
+                    throw new Error('未找到绕过后的 URL。请检查 API 返回的数据结构。');
                 }
             } catch (error) {
                 output.value = `错误: ${error.message}`;
