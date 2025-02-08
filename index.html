@@ -48,7 +48,7 @@
             width: 100%;
             padding: 15px;
             font-size: 1.2em;
-            margin: 20px 极光;
+            margin: 20px 0;
             background: #333;
             border: 1px solid #444;
             color: #fff;
@@ -65,32 +65,26 @@
         button {
             padding: 15px 30px;
             font-size: 1.1em;
-            color: #fff; /* 文本颜色设置为白色 */
-            border: none;
+            background: #555;
+            color: #fff;
+            border: 2px solid #777;
             border-radius: 10px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             position: relative;
-            background: linear-gradient(90deg, #64b5f6, #fff, #64b5f6); /* 蓝白渐变 */
-            background-size: 200% 100%; /* 背景大小 */
-            animation: buttonGradientAnimation 3s linear infinite; /* 添加动画 */
+            box-shadow: 0 0 8px rgba(119, 119, 119, 0.3);
         }
 
         button:hover {
-            background-position: -100% 0; /* 鼠标悬停时背景移动 */
+            background: #777;
+            border-color: #999;
+            box-shadow: 0 0 12px rgba(153, 153, 153, 0.5);
         }
 
         button:active {
-            transform: scale(0.95); /* 点击时按钮缩小 */
-        }
-
-        @keyframes buttonGradientAnimation {
-            0% {
-                background-position: 100% 0; /* 背景起始位置 */
-            }
-            100% {
-                background-position: -100% 0; /* 背景结束位置 */
-            }
+            transform: scale(0.95);
+            background: #444;
+            box-shadow: 0 0 6px rgba(119, 119, 119, 0.5);
         }
 
         #output {
@@ -103,29 +97,6 @@
             border-radius: 5px;
             margin-top: 20px;
             min-height: 150px;
-            position: relative;
-        }
-
-        /* 小人跑步动画 */
-        #runningAnimation {
-            display: none; /* 默认隐藏 */
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            width: 50px;
-            height: 50px;
-            background: url('https://github.dev/fcsdsss/gif-/blob/main/1738976287699.gif') no-repeat center center; /* 替换为你的小人跑步 GIF */
-            background-size: contain;
-            animation: run 2s linear infinite;
-        }
-
-        @keyframes run {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(calc(100% - 50px));
-            }
         }
 
         audio {
@@ -137,17 +108,15 @@
 <body>
     <div class="container">
         <h2>绕过 URL</h2>
-        <input type="text"极光 id="urlInput" placeholder="在此输入 URL">
+        <input type="text" id="urlInput" placeholder="在此输入 URL">
         <div class="button-group">
             <button onclick="bypassUrl()">绕过</button>
             <button onclick="clearFields()">清空</button>
             <button onclick="navigateToResponse()">转到响应</button>
             <button onclick="copyOutput()">复制</button>
-            <button onclick="pasteFromClipboard()">粘贴</button>
+            <button onclick="pasteFromClipboard()">粘贴</button> <!-- 新增粘贴按钮 -->
         </div>
         <textarea id="output" rows="5" cols="50" readonly placeholder="绕过后的 URL 将显示在此处..."></textarea>
-        <!-- 小人跑步动画 -->
-        <div id="runningAnimation"></div>
         
         <!-- 添加音乐播放器 -->
         <audio id="audioPlayer" controls autoplay loop>
@@ -160,15 +129,11 @@
         async function bypassUrl() {
             const urlInput = document.getElementById('urlInput').value;
             const output = document.getElementById('output');
-            const runningAnimation = document.getElementById('runningAnimation');
 
             if (!urlInput) {
                 alert('请先输入一个 URL。');
                 return;
             }
-
-            // 显示跑步动画
-            runningAnimation.style.display = 'block';
 
             try {
                 // 调用 API
@@ -188,7 +153,7 @@
                     output.value = cleanedUrl;
                 } else {
                     // 如果字段名不是 "url"，尝试从 JSON 数据中查找 URL
-                    const urlRegex = /https?:\/\/[^\s"]+/; /* 匹配 URL 的正则表达式 */
+                    const urlRegex = /https?:\/\/[^\s"]+/; // 匹配 URL 的正则表达式
                     const urlMatch = JSON.stringify(data).match(urlRegex);
 
                     if (urlMatch) {
@@ -201,15 +166,12 @@
                 }
             } catch (error) {
                 output.value = `错误: ${error.message}`;
-            } finally {
-                // 隐藏跑步动画
-                runningAnimation.style.display = 'none';
             }
         }
 
         function cleanUrl(url) {
             // 去掉 URL 后面的 "success"、"true" 和引号等无关内容
-            return url.replace(/["\s,].*$/, ''); /* 去掉引号、空格和逗号及其后面的内容 */
+            return url.replace(/["\s,].*$/, ''); // 去掉引号、空格和逗号及其后面的内容
         }
 
         function clearFields() {
@@ -217,18 +179,18 @@
             document.getElementById('output').value = '';
         }
 
-        function navigate极光ToResponse() {
+        function navigateToResponse() {
             const output = document.getElementById('output').value;
 
             if (output && output.startsWith('http')) {
-                window.open(output, '_blank'); /* 在新标签页中打开 URL */
+                window.open(output, '_blank'); // 在新标签页中打开 URL
             } else {
                 alert('未找到有效的 URL，请先点击“绕过”按钮。');
             }
         }
 
         function copyOutput() {
-            const output = document.getElementById极光('output').value;
+            const output = document.getElementById('output').value;
 
             if (output && output.startsWith('http')) {
                 navigator.clipboard.writeText(output)
@@ -246,8 +208,8 @@
         // 新增粘贴函数
         async function pasteFromClipboard() {
             try {
-                const text = await navigator.clipboard.readText(); /* 读取剪切板内容 */
-                document.getElementById('urlInput').value = text; /* 将内容粘贴到输入框 */
+                const text = await navigator.clipboard.readText(); // 读取剪切板内容
+                document.getElementById('urlInput').value = text; // 将内容粘贴到输入框
             } catch (error) {
                 alert('无法读取剪切板内容，请手动粘贴。');
             }
