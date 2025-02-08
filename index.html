@@ -65,22 +65,26 @@
         button {
             padding: 15px 30px;
             font-size: 1.1em;
+            background: #555;
             color: #fff;
-            border: none;
+            border: 2px solid #777;
             border-radius: 10px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             position: relative;
-            background: linear-gradient(90deg, #64b5f6, #fff, #64b5f6); /* 蓝白渐变 */
-            background-size: 200% 100%; /* 背景大小 */
+            box-shadow: 0 0 8px rgba(119, 119, 119, 0.3);
         }
 
         button:hover {
-            background-position: -100% 0; /* 鼠标悬停时背景移动 */
+            background: #777;
+            border-color: #999;
+            box-shadow: 0 0 12px rgba(153, 153, 153, 0.5);
         }
 
         button:active {
-            transform: scale(0.95); /* 点击时按钮缩小 */
+            transform: scale(0.95);
+            background: #444;
+            box-shadow: 0 0 6px rgba(119, 119, 119, 0.5);
         }
 
         #output {
@@ -110,7 +114,7 @@
             <button onclick="clearFields()">清空</button>
             <button onclick="navigateToResponse()">转到响应</button>
             <button onclick="copyOutput()">复制</button>
-            <button onclick="pasteFromClipboard()">粘贴</button>
+            <button onclick="pasteFromClipboard()">粘贴</button> <!-- 新增粘贴按钮 -->
         </div>
         <textarea id="output" rows="5" cols="50" readonly placeholder="绕过后的 URL 将显示在此处..."></textarea>
         
@@ -149,7 +153,7 @@
                     output.value = cleanedUrl;
                 } else {
                     // 如果字段名不是 "url"，尝试从 JSON 数据中查找 URL
-                    const urlRegex = /https?:\/\/[^\s"]+/; /* 匹配 URL 的正则表达式 */
+                    const urlRegex = /https?:\/\/[^\s"]+/; // 匹配 URL 的正则表达式
                     const urlMatch = JSON.stringify(data).match(urlRegex);
 
                     if (urlMatch) {
@@ -167,7 +171,7 @@
 
         function cleanUrl(url) {
             // 去掉 URL 后面的 "success"、"true" 和引号等无关内容
-            return url.replace(/["\s,].*$/, ''); /* 去掉引号、空格和逗号及其后面的内容 */
+            return url.replace(/["\s,].*$/, ''); // 去掉引号、空格和逗号及其后面的内容
         }
 
         function clearFields() {
@@ -179,7 +183,7 @@
             const output = document.getElementById('output').value;
 
             if (output && output.startsWith('http')) {
-                window.open(output, '_blank'); /* 在新标签页中打开 URL */
+                window.open(output, '_blank'); // 在新标签页中打开 URL
             } else {
                 alert('未找到有效的 URL，请先点击“绕过”按钮。');
             }
@@ -204,8 +208,8 @@
         // 新增粘贴函数
         async function pasteFromClipboard() {
             try {
-                const text = await navigator.clipboard.readText(); /* 读取剪切板内容 */
-                document.getElementById('urlInput').value = text; /* 将内容粘贴到输入框 */
+                const text = await navigator.clipboard.readText(); // 读取剪切板内容
+                document.getElementById('urlInput').value = text; // 将内容粘贴到输入框
             } catch (error) {
                 alert('无法读取剪切板内容，请手动粘贴。');
             }
