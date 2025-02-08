@@ -1,383 +1,229 @@
-//test hub
 <!DOCTYPE html>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Test Hub Panel</title>
-<meta name="description" content="Test Hub Bypasser is a service that allows you to bypass link shorteners and advertising services.">
-<link rel="stylesheet" href="css/style.css">
-<link rel="icon" href="images/TestHubIcon.jpg">
-
-<html lang="pt-br">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Hub Panel</title>
-    <meta name="google-site-verification" content="q6E16RG1dnu5VVcqMSXue9QHNQB3avZdGJZKA6R-aeE" />
-    <link rel="stylesheet" href="css/style.css">
+    <title>绕过 API</title>
+    <!-- 样式部分保持不变 -->
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            color: transparent; /* 文本颜色设置为透明 */
+            background: linear-gradient(90deg, #64b5f6, #fff, #64b5f6); /* 蓝白渐变 */
+            background-size: 200% 100%; /* 背景大小 */
+            background-clip: text; /* 裁剪背景到文本区域 */
+            -webkit-background-clip: text; /* 兼容 Safari */
+            animation: gradientAnimation 3s linear infinite; /* 添加动画 */
+        }
+
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 100% 0; /* 背景起始位置 */
+            }
+            100% {
+                background-position: -100% 0; /* 背景结束位置 */
+            }
+        }
+
+        #urlInput {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            margin: 20px 0;
+            background: #333;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 5px;
+        }
+
+        .button-group {
+            margin: 30px 0;
+            gap: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            background: #555;
+            color: #fff;
+            border: 2px solid #777;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            box-shadow: 0 0 8px rgba(119, 119, 119, 0.3);
+        }
+
+        button:hover {
+            background: #777;
+            border-color: #999;
+            box-shadow: 0 0 12px rgba(153, 153, 153, 0.5);
+        }
+
+        button:active {
+            transform: scale(0.95);
+            background: #444;
+            box-shadow: 0 0 6px rgba(119, 119, 119, 0.5);
+        }
+
+        #output {
+            width: 100%;
+            padding: 20px;
+            font-size: 1.1em;
+            background: #333;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 5px;
+            margin-top: 20px;
+            min-height: 150px;
+        }
+
+        audio {
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-content">
-            <div class="menu-toggle">
-                <span class="hamburger"></span>
-            </div>
-            <div class="nav-left">
-                <a href="https://discord.gg/tyrjpkJhkd" class="nav-item"><img src="images/TestHubIcon.jpg" alt="Logo" class="nav-logo"> Test Hub Bypasser</a>
-                <a href="https://discord.gg/z5ZtNCAw76" class="nav-item">Free API</a>
-                <a class='nav-item' href='/docs'>API Docs</a>
-                <a class='nav-item' href='/docs'>SOON!</a>
-            </div>
-            <div class="nav-right">
-                <a href="https://discord.com/oauth2/authorize?client_id=1264534164351488114&scope=bot%20applications.commands&permissions=8" class="contact-btn">Bot Invite</a>
-            </div>
-        </div>
-        <!-- Menu mobile -->
-        <div class="mobile-menu">
-            <a href="https://discord.gg/z5ZtNCAw76" class="mobile-item">Free API</a>
-            <a class='mobile-item' href='/docs'>API Docs</a>
-        </div>
-    </nav>
-
-
-
     <div class="container">
-        <!-- Painel Principal -->
-        <div class="main-panel">
-            <h1><span class="icon">鉁�</span> Test Hub Bypasser</h1>
-            <input type="text" placeholder="Enter your link" class="link-input" id="linkInput">
-            <button class="bypass-btn" id="bypassBtn">
-                <span class="link-icon"><img src="images/link.png" alt="Link"></span> Bypass Link
-            </button>
-            <p id="result" style="display: none;"></p>
-            <button class="copy-btn" id="copyBtn" style="display: none;">Copy</button>
+        <h2>绕过 URL</h2>
+        <input type="text" id="urlInput" placeholder="在此输入 URL">
+        <div class="button-group">
+            <button onclick="bypassUrl()">绕过</button>
+            <button onclick="clearFields()">清空</button>
+            <button onclick="navigateToResponse()">转到响应</button>
+            <button onclick="copyOutput()">复制</button>
+            <button onclick="pasteFromClipboard()">粘贴</button> <!-- 新增粘贴按钮 -->
         </div>
+        <textarea id="output" rows="5" cols="50" readonly placeholder="绕过后的 URL 将显示在此处..."></textarea>
+        
+        <!-- 添加音乐播放器 -->
+        <audio id="audioPlayer" controls autoplay loop>
+            <source src="https://raw.githubusercontent.com/FCSDSSS/c/main/当羞涩不再禁锢_清流也是一种罪-张志成-387944592-320.mp3" type="audio/mpeg">
+            您的浏览器不支持音频播放。
+        </audio>
     </div>
-    <script>
-        const bypassBtn = document.getElementById("bypassBtn");
-        const linkInput = document.getElementById("linkInput");
-        const resultBox = document.getElementById("result");
-        const copyBtn = document.getElementById("copyBtn");
 
-        bypassBtn.addEventListener("click", async () => {
-            const link = linkInput.value.trim();
-            if (!link) {
-                resultBox.style.color = "red";
-                resultBox.style.display = "block";
-                resultBox.textContent = "Please enter a valid link.";
-                copyBtn.style.display = "none";
+    <script>
+        async function bypassUrl() {
+            const urlInput = document.getElementById('urlInput').value;
+            const output = document.getElementById('output');
+
+            if (!urlInput) {
+                alert('请先输入一个 URL。');
                 return;
             }
 
             try {
-                resultBox.style.color = "#333";
-                resultBox.style.display = "block";
-                resultBox.textContent = "Processing...";
-                copyBtn.style.display = "none";
+                // 调用 API
+                const apiUrl = `http://helya.pylex.xyz:10234/api/addlink?url=
 
-                // Primera API
-                const response1 = await fetch(`https://ethos.kys.gay/api/free/bypass?url=${encodeURIComponent(link)}`);
-                const data1 = await response1.json();
+http://helya.pylex.xyz:10234/api/supported=${encodeURIComponent(urlInput)}`;
+                const response = await fetch(apiUrl);
 
-                if (data1.result) {
-                    // Si la primera API devuelve un resultado v谩lido
-                    resultBox.style.color = "#333";
-                    resultBox.textContent = `Result: ${data1.result}`;
-                    copyBtn.style.display = "inline-block";
+                if (!response.ok) {
+                    throw new Error(`API 请求失败: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                // 假设 API 返回的 URL 在 "url" 字段中
+                if (data.url) {
+                    // 清理 URL，去掉后面的 "success"、"true" 和引号等无关内容
+                    const cleanedUrl = cleanUrl(data.url);
+                    output.value = cleanedUrl;
                 } else {
-                    // Si no hay "rezult", llama a la segunda API
-                    const response2 = await fetch(`http://fi4.bot-hosting.net:22869/executor?url=${encodeURIComponent(link)}`);
-                    const data2 = await response2.json();
+                    // 如果字段名不是 "url"，尝试从 JSON 数据中查找 URL
+                    const urlRegex = /https?:\/\/[^\s"]+/; // 匹配 URL 的正则表达式
+                    const urlMatch = JSON.stringify(data).match(urlRegex);
 
-                    if (data2.key) {
-                        resultBox.style.color = "#333";
-                        resultBox.textContent = `Result: ${data2.key}`;
-                        copyBtn.style.display = "inline-block";
+                    if (urlMatch) {
+                        // 清理 URL，去掉后面的 "success"、"true" 和引号等无关内容
+                        const cleanedUrl = cleanUrl(urlMatch[0]);
+                        output.value = cleanedUrl;
                     } else {
-                        throw new Error("Both APIs failed to provide a result.");
+                        throw new Error('未找到绕过后的 URL。');
                     }
                 }
             } catch (error) {
-                // Manejo de errores
-                resultBox.style.color = "red";
-                resultBox.textContent = `Error: ${error.message}`;
-                copyBtn.style.display = "none";
+                output.value = `错误: ${error.message}`;
             }
-        });
+        }
 
-        copyBtn.addEventListener("click", () => {
-            const resultText = resultBox.textContent.replace("Result: ", "").trim();
-            if (resultText) {
-                navigator.clipboard.writeText(resultText).then(() => {
-                    copyBtn.textContent = "Copied!";
-                    copyBtn.classList.add("copied");
-                    setTimeout(() => {
-                        copyBtn.textContent = "Copy";
-                        copyBtn.classList.remove("copied");
-                    }, 2000);
-                }).catch((error) => {
-                    alert("Failed to copy text: " + error.message);
-                });
+        function cleanUrl(url) {
+            // 去掉 URL 后面的 "success"、"true" 和引号等无关内容
+            return url.replace(/["\s,].*$/, ''); // 去掉引号、空格和逗号及其后面的内容
+        }
+
+        function clearFields() {
+            document.getElementById('urlInput').value = '';
+            document.getElementById('output').value = '';
+        }
+
+        function navigateToResponse() {
+            const output = document.getElementById('output').value;
+
+            if (output && output.startsWith('http')) {
+                window.open(output, '_blank'); // 在新标签页中打开 URL
+            } else {
+                alert('未找到有效的 URL，请先点击“绕过”按钮。');
+            }
+        }
+
+        function copyOutput() {
+            const output = document.getElementById('output').value;
+
+            if (output && output.startsWith('http')) {
+                navigator.clipboard.writeText(output)
+                    .then(() => {
+                        alert('URL 已复制到剪贴板！');
+                    })
+                    .catch(() => {
+                        alert('复制失败，请手动复制。');
+                    });
+            } else {
+                alert('没有可复制的 URL，请先点击“绕过”按钮。');
+            }
+        }
+
+        // 新增粘贴函数
+        async function pasteFromClipboard() {
+            try {
+                const text = await navigator.clipboard.readText(); // 读取剪切板内容
+                document.getElementById('urlInput').value = text; // 将内容粘贴到输入框
+            } catch (error) {
+                alert('无法读取剪切板内容，请手动粘贴。');
+            }
+        }
+
+        // 如果音频没有自动播放，用户点击页面后开始播放
+        const audioPlayer = document.getElementById('audioPlayer');
+        document.body.addEventListener('click', () => {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
             }
         });
     </script>
 </body>
 </html>
-
-        <!-- Cards Inferiores -->
-        <div class="cards-container">
-            <div class="card">
-                <h2><span class="link-icon"><img src="images/services.png" alt="Link"></span> Supported Services</h2>
-                <p>Our bypass service supports various link shorteners and advertising services:</p>
-                <ul class="service-list">
-                    <li><span class="bullet"></span>Linkvertise (All versions)</li>
-                    <li><span class="bullet"></span>Adfly</li>
-                    <li><span class="bullet"></span>Sub2Unlock</li>
-                    <li><span class="bullet"></span>BoostLink</li>
-                    <li><span class="bullet"></span>And many more...</li>
-                </ul>
-            </div>
-
-            <div class="card">
-                <h2><span class="api-icon"><img src="images/api.png" alt="API"></span> API Features</h2>
-                <p>Access our powerful API with these features:</p>
-                <ul>
-                    <li><span class="bullet"></span>Fast response times</li>
-                    <li><span class="bullet"></span>High success rate</li>
-                    <li><span class="bullet"></span>Regular updates</li>                </ul>
-            </div>
-
-            <!-- Novo card de Community -->
-            <div class="card">
-                <h2><span class="community-icon"><img src="images/comunity.png" alt="Discord"></span> Community</h2>
-                <p>Join our growing community for support, updates, and discussions.</p>
-                <button class="discord-btn">
-                    <svg class="discord-icon" width="20" height="20" viewBox="0 0 24 24">
-                        <path fill="currentColor" d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09c-.01-.02-.04-.03-.07-.03c-1.5.26-2.93.71-4.27 1.33c-.01 0-.02.01-.03.02c-2.72 4.07-3.47 8.03-3.1 11.95c0 .02.01.04.03.05c1.8 1.32 3.53 2.12 5.24 2.65c.03.01.06 0 .07-.02c.4-.55.76-1.13 1.07-1.74c.02-.04 0-.08-.04-.09c-.57-.22-1.11-.48-1.64-.78c-.04-.02-.04-.08-.01-.11c.11-.08.22-.17.33-.25c.02-.02.05-.02.07-.01c3.44 1.57 7.15 1.57 10.55 0c.02-.01.05-.01.07.01c.11.09.22.17.33.26c.04.03.04.09-.01.11c-.52.31-1.07.56-1.64.78c-.04.01-.05.06-.04.09c.32.61.68 1.19 1.07 1.74c.03.01.06.02.09.01c1.72-.53 3.45-1.33 5.25-2.65c.02-.01.03-.03.03-.05c.44-4.53-.73-8.46-3.1-11.95c-.01-.01-.02-.02-.04-.02zM8.52 14.91c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.84 2.12-1.89 2.12zm6.97 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.83 2.12-1.89 2.12z"/>
-                    </svg>
-                    Join our Discord
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <footer class="footer">
-        <div class="footer-content">
-            Made with <span class="heart">鉂�</span> powered by <a href="https://exclient.xyz" class="footer-link">9menta</a>
-        </div>
-    </footer>
-
-    <!-- Particles.js -->
-    <div id="particles-js"></div>
-
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script src="js/particles-config.js"></script>
-    <script src="js/menu.js"></script>
-</body>
-</html>
-
-
-
-// eas bypass
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EAS Pro Bypass</title>
-    <link rel="stylesheet" href="/styles/bypass.css">
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script> <!-- Turnstile API -->
-<script data-cfasync="false" nonce="28994354-8a59-4a77-9848-41b2b19dfbde">try{(function(w,d){!function(a,b,c,d){if(a.zaraz)console.error("zaraz is loaded twice");else{a[c]=a[c]||{};a[c].executed=[];a.zaraz={deferred:[],listeners:[]};a.zaraz._v="5848";a.zaraz._n="28994354-8a59-4a77-9848-41b2b19dfbde";a.zaraz.q=[];a.zaraz._f=function(e){return async function(){var f=Array.prototype.slice.call(arguments);a.zaraz.q.push({m:e,a:f})}};for(const g of["track","set","debug"])a.zaraz[g]=a.zaraz._f(g);a.zaraz.init=()=>{var h=b.getElementsByTagName(d)[0],i=b.createElement(d),j=b.getElementsByTagName("title")[0];j&&(a[c].t=b.getElementsByTagName("title")[0].text);a[c].x=Math.random();a[c].w=a.screen.width;a[c].h=a.screen.height;a[c].j=a.innerHeight;a[c].e=a.innerWidth;a[c].l=a.location.href;a[c].r=b.referrer;a[c].k=a.screen.colorDepth;a[c].n=b.characterSet;a[c].o=(new Date).getTimezoneOffset();if(a.dataLayer)for(const k of Object.entries(Object.entries(dataLayer).reduce(((l,m)=>({...l[1],...m[1]})),{})))zaraz.set(k[0],k[1],{scope:"page"});a[c].q=[];for(;a.zaraz.q.length;){const n=a.zaraz.q.shift();a[c].q.push(n)}i.defer=!0;for(const o of[localStorage,sessionStorage])Object.keys(o||{}).filter((q=>q.startsWith("_zaraz_"))).forEach((p=>{try{a[c]["z_"+p.slice(7)]=JSON.parse(o.getItem(p))}catch{a[c]["z_"+p.slice(7)]=o.getItem(p)}}));i.referrerPolicy="origin";i.src="/cdn-cgi/zaraz/s.js?z="+btoa(encodeURIComponent(JSON.stringify(a[c])));h.parentNode.insertBefore(i,h)};["complete","interactive"].includes(b.readyState)?zaraz.init():a.addEventListener("DOMContentLoaded",zaraz.init)}}(w,d,"zarazData","script");window.zaraz._p=async bs=>new Promise((bt=>{if(bs){bs.e&&bs.e.forEach((bu=>{try{const bv=d.querySelector("script[nonce]"),bw=bv?.nonce||bv?.getAttribute("nonce"),bx=d.createElement("script");bw&&(bx.nonce=bw);bx.innerHTML=bu;bx.onload=()=>{d.head.removeChild(bx)};d.head.appendChild(bx)}catch(by){console.error(`Error executing script: ${bu}\n`,by)}}));Promise.allSettled((bs.f||[]).map((bz=>fetch(bz[0],bz[1]))))}bt()}));zaraz._p({"e":["(function(w,d){})(window,document)"]});})(window,document)}catch(e){throw fetch("/cdn-cgi/zaraz/t"),e;};</script></head>
-
-<body>
-    <div class="container">
-        <section>
-            <h2>EASx Bypass</h2>
-            <form id="bypass-form">
-                <input type="text" id="url" placeholder="Enter URL to bypass" required>
-                <!-- Turnstile CAPTCHA widget -->
-                <div class="cf-turnstile" id="turnstile-widget" data-sitekey="0x4AAAAAAA2ORwdhcI20o8xW"></div>
-                <button type="submit" id="bypass-button" disabled>Bypass</button>
-                <div id="error-message" style="display: none; color: red; margin-top: 10px;"></div>
-            </form>
-            <div id="resultBox" style="display: none;">
-                <pre id="result"></pre>
-                <button id="copyButton">Copy</button>
-            </div>
-        </section>
-    </div>
-
-    <script>
-        const bypassForm = document.getElementById('bypass-form');
-        const urlInput = document.getElementById('url');
-        const bypassButton = document.getElementById('bypass-button');
-        const copyButton = document.getElementById('copyButton');
-        const resultBox = document.getElementById('resultBox');
-        const result = document.getElementById('result');
-        const errorMessage = document.getElementById('error-message');
-
-        window.onload = () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const redirectUrl = urlParams.get('redirect');
-
-            if (redirectUrl) {
-                urlInput.value = redirectUrl;
-                bypassButton.removeAttribute('disabled');
-                bypassForm.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    errorMessage.style.display = 'none';
-                    const url = urlInput.value.trim();
-                    const captchaResponse = document.querySelector('[name="cf-turnstile-response"]').value;
-
-                    if (!captchaResponse) {
-                        showError('Please complete the CAPTCHA.');
-                        return;
-                    }
-
-                    if (!isValidUrl(url)) {
-                        showError('Invalid URL. Please enter a valid URL.');
-                        return;
-                    }
-
-                    showLoading();
-
-                    try {
-                        const response = await fetch('/bypass', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ url, captchaResponse })
-                        });
-
-                        if (response.ok) {
-                            const data = await response.json();
-                            if (data.result) {
-                                window.location.href = data.result;
-                            } else {
-                                showError('Unsupported URL. Please try another URL.');
-                            }
-                        } else {
-                            const data = await response.json();
-                            showError('Error: ' + (data.message || 'Unknown error occurred.'));
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        showError('An error occurred. Please try again later.');
-                    } finally {
-                        // Refresh the Turnstile CAPTCHA after every attempt
-                        turnstile.reset('#turnstile-widget');
-                    }
-                });
-            } else {
-                bypassForm.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    errorMessage.style.display = 'none';
-                    const url = urlInput.value.trim();
-                    const captchaResponse = document.querySelector('[name="cf-turnstile-response"]').value;
-
-                    if (!captchaResponse) {
-                        showError('Please complete the CAPTCHA.');
-                        return;
-                    }
-
-                    if (!isValidUrl(url)) {
-                        showError('Invalid URL. Please enter a valid URL.');
-                        return;
-                    }
-
-                    showLoading();
-
-                    try {
-                        const response = await fetch('/bypass', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ url, captchaResponse })
-                        });
-
-                        if (response.ok) {
-                            const data = await response.json();
-                            if (data.result) {
-                                showResult(data);
-                            } else {
-                                showError('Unsupported URL. Please try another URL.');
-                            }
-                        } else {
-                            const data = await response.json();
-                            showError('Error: ' + (data.message || 'Unknown error occurred.'));
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        showError('An error occurred. Please try again later.');
-                    } finally {
-                        // Refresh the Turnstile CAPTCHA after every attempt
-                        turnstile.reset('#turnstile-widget');
-                    }
-                });
-            }
-
-            function showLoading() {
-                result.textContent = 'Loading...';
-                resultBox.style.display = 'block';
-                errorMessage.style.display = 'none';
-            }
-
-            function showResult(data) {
-                result.textContent = data.result;
-                resultBox.style.display = 'block';
-                errorMessage.style.display = 'none';
-            }
-
-            function showError(message) {
-                resultBox.style.display = 'none';
-                errorMessage.textContent = message;
-                errorMessage.style.display = 'block';
-            }
-
-            function isValidUrl(url) {
-                try {
-                    new URL(url);
-                    return true;
-                } catch (error) {
-                    return false;
-                }
-            }
-
-            copyButton.addEventListener('click', () => {
-                const textToCopy = result.textContent;
-                navigator.clipboard.writeText(textToCopy).then(() => {
-                    alert('Result copied!');
-                }).catch(err => {
-                    console.error('Copy error:', err);
-                });
-            });
-        };
-
-        urlInput.addEventListener('input', () => {
-            if (urlInput.value.trim() !== '') {
-                bypassButton.classList.add('active');
-                bypassButton.removeAttribute('disabled');
-            } else {
-                bypassButton.classList.remove('active');
-                bypassButton.setAttribute('disabled', true);
-            }
-        });
-    </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'8f6e5c4a5c47db24',t:'MTczNTAxOTkxNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"8f6e5c4a5c47db24","version":"2024.10.5","r":1,"token":"7725195ee3554698bdc98a9eb1810fcc","serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}}}' crossorigin="anonymous"></script>
-</body>
-
-</html>
-
-
-// bypass.city
-<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta name="robots" content="index,follow"/><meta name="description" content="Bypass any linkvertise, lootlinks.com, work.ink or other annoying links with bypass.city - the fastest and easiest way to get to your destination."/><meta name="twitter:card" content="summary_large_image"/><meta property="og:title" content="bypass.city - Best Linkvertise &amp; Work.ink bypasser, including many more!"/><meta property="og:description" content="Bypass any linkvertise, lootlinks.com, work.ink or other annoying links with bypass.city - the fastest and easiest way to get to your destination."/><meta property="og:url" content="https://bypass.city/"/><meta property="og:type" content="object"/><meta property="og:image" content="images/og-image.png"/><meta property="og:image:alt" content="bypass.city - Best Linkvertise &amp; Work.ink bypasser, including many more!"/><meta property="og:image:type" content="image/png"/><meta property="og:image:width" content="521"/><meta property="og:image:height" content="268"/><meta property="og:locale" content="en_US"/><meta property="og:site_name" content="Bypass.city"/><link rel="canonical" href="https://bypass.city/"/><meta name="twitter:title" content="bypass.city - Best Linkvertise &amp; Work.ink bypasser, including many more!"/><meta name="twitter:description" content="Bypass any linkvertise, lootlinks.com, work.ink or other annoying links with bypass.city - the fastest and easiest way to get to your destination."/><meta name="twitter:image:src" content="/images/og-image.png"/><meta name="keywords" content="bypasser linkvertise, bypass linkvertise
-, universal bypass, linkvertise, bypasser, linkvertise skipper, linkvertise bypass, linkvertise bypasser, link bypasser, link bypass, thebypasser, adlink bypass, ad link bypasser, bypass links, how to bypass linkvertise, workink bypass, bypass city, ad bypass, ad bypasser"/><meta name="application-name" content="Bypass.city"/><meta name="apple-mobile-web-store-capable" content="yes"/><meta name="apple-mobile-web-store-status-bar-style" content="default"/><meta name="apple-mobile-web-store-title" content="Bypass.city"/><meta name="format-detection" content="telephone=no"/><meta name="mobile-web-store-capable" content="yes"/><meta name="msapplication-TileColor" content="#1a1b1e"/><meta name="msapplication-tap-highlight" content="no"/><meta name="theme-color" content="#1a1b1e"/><meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width"/><link rel="manifest" href="/manifest.json"/><title>bypass.city - Best Linkvertise &amp; Work.ink bypasser, including many more!</title><link rel="shortcut icon" type="image/png" sizes="32x32" href="/generated/favicon-32x32.png"/><meta name="mobile-web-app-capable" content="yes"/><link rel="icon" type="image/x-icon" href="/generated/favicon.ico"/><link rel="icon" type="image/png" sizes="16x16" href="/generated/favicon-16x16.png"/><link rel="icon" type="image/png" sizes="32x32" href="/generated/favicon-32x32.png"/><link rel="icon" type="image/png" sizes="48x48" href="/generated/favicon-48x48.png"/><link rel="apple-touch-icon" sizes="57x57" href="/generated/apple-touch-icon-57x57.png"/><link rel="apple-touch-icon" sizes="60x60" href="/generated/apple-touch-icon-60x60.png"/><link rel="apple-touch-icon" sizes="72x72" href="/generated/apple-touch-icon-72x72.png"/><link rel="apple-touch-icon" sizes="76x76" href="/generated/apple-touch-icon-76x76.png"/><link rel="apple-touch-icon" sizes="114x114" href="/generated/apple-touch-icon-114x114.png"/><link rel="apple-touch-icon" sizes="120x120" href="/generated/apple-touch-icon-120x120.png"/><link rel="apple-touch-icon" sizes="144x144" href="/generated/apple-touch-icon-144x144.png"/><link rel="apple-touch-icon" sizes="152x152" href="/generated/apple-touch-icon-152x152.png"/><link rel="apple-touch-icon" sizes="167x167" href="/generated/apple-touch-icon-167x167.png"/><link rel="apple-touch-icon" sizes="180x180" href="/generated/apple-touch-icon-180x180.png"/><link rel="apple-touch-icon" sizes="1024x1024" href="/generated/apple-touch-icon-1024x1024.png"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/><meta name="apple-mobile-web-app-title"/><link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/generated/apple-touch-startup-image-640x1136.png"/><link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="/generated/apple-touch-startup-image-1136x640.png"/><link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/generated/apple-touch-startup-image-750x1334.png"/><link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="/generated/apple-touch-startup-image-1334x750.png"/><link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="/generated/apple-touch-startup-image-1125x2436.png"/><link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" href="/generated/apple-touch-startup-image-2436x1125.png"/><link rel="apple-touch-startup-image" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="/generated/apple-touch-startup-image-1170x2532.png"/><link rel="apple-touch-startup-image" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" href="/generated/apple-touch-startup-image-2532x1170.png"/><link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/generated/apple-touch-startup-image-828x1792.png"/><link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="/generated/apple-touch-startup-image-1792x828.png"/><link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="/generated/apple-touch-startup-image-1242x2688.png"/><link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" href="/generated/apple-touch-startup-image-2688x1242.png"/><link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="/generated/apple-touch-startup-image-1242x2208.png"/><link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" href="/generated/apple-touch-startup-image-2208x1242.png"/><link rel="apple-touch-startup-image" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="/generated/apple-touch-startup-image-1284x2778.png"/><link rel="apple-touch-startup-image" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" href="/generated/apple-touch-startup-image-2778x1284.png"/><link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/generated/apple-touch-startup-image-1536x2048.png"/><link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="/generated/apple-touch-startup-image-2048x1536.png"/><link rel="apple-touch-startup-image" media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/generated/apple-touch-startup-image-1620x2160.png"/><link rel="apple-touch-startup-image" media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="/generated/apple-touch-startup-image-2160x1620.png"/><link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/generated/apple-touch-startup-image-1668x2388.png"/><link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="/generated/apple-touch-startup-image-2388x1668.png"/><link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/generated/apple-touch-startup-image-1668x2224.png"/><link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="/generated/apple-touch-startup-image-2224x1668.png"/><link rel="apple-touch-startup-image" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/generated/apple-touch-startup-image-2048x2732.png"/><link rel="apple-touch-startup-image" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="/generated/apple-touch-startup-image-2732x2048.png"/><meta name="msapplication-TileImage" content="/generated/mstile-144x144.png"/><meta name="msapplication-config" content="/generated/browserconfig.xml"/><link rel="yandex-tableau-widget" href="/generated/yandex-browser-manifest.json"/><meta name="cryptomus" content="a6ff9382"/><meta name="next-head-count" content="82"/><script data-mantine-script="true">try {
-  var _colorScheme = window.localStorage.getItem("mantine-color-scheme-value");
-  var colorScheme = _colorScheme === "light" || _colorScheme === "dark" || _colorScheme === "auto" ? _colorScheme : "dark";
-  var computedColorScheme = colorScheme !== "auto" ? colorScheme : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";  document.documentElement.setAttribute("data-mantine-color-scheme", computedColorScheme);
-} catch (e) {}
-</script><link rel="preload" href="/_next/static/media/a34f9d1faa5f3315-s.p.woff2" as="font" type="font/woff2" crossorigin="anonymous" data-next-font="size-adjust"/><link rel="preload" href="/_next/static/css/3edd7440530e20d8.css" as="style"/><link rel="stylesheet" href="/_next/static/css/3edd7440530e20d8.css" data-n-g=""/><link rel="preload" href="/_next/static/css/bcf20bfbc04602d8.css" as="style"/><link rel="stylesheet" href="/_next/static/css/bcf20bfbc04602d8.css" data-n-p=""/><noscript data-n-css=""></noscript><script defer="" nomodule="" src="/_next/static/chunks/polyfills-42372ed130431b0a.js"></script><script src="/_next/static/chunks/webpack-4ad1b6971fd9974c.js" defer=""></script><script src="/_next/static/chunks/framework-64ad27b21261a9ce.js" defer=""></script><script src="/_next/static/chunks/main-dacacf673b0869a1.js" defer=""></script><script src="/_next/static/chunks/pages/_app-aaf52fe72fd4ec39.js" defer=""></script><script src="/_next/static/chunks/5c0b189e-4d706fe89668f962.js" defer=""></script><script src="/_next/static/chunks/976-5f1e4e642373db62.js" defer=""></script><script src="/_next/static/chunks/817-93da5a819f312702.js" defer=""></script><script src="/_next/static/chunks/17-a6d92544117a62b1.js" defer=""></script><script src="/_next/static/chunks/394-e10a187a2222fc5e.js" defer=""></script><script src="/_next/static/chunks/pages/index-a3c747ad07eb9fa0.js" defer=""></script><script src="/_next/static/6aN3vaWEzmkQoPgymBMEC/_buildManifest.js" defer=""></script><script src="/_next/static/6aN3vaWEzmkQoPgymBMEC/_ssgManifest.js" defer=""></script><style data-emotion="css 15vmawf 4g6ai3 cl9kin k3gu75 15qwzfp mw5ny9 mwent8 81j1jw coctn n468in yjbvm5 2eli5l 123nw27 uigtmp dsel73 vl50i1 1l5zme">[data-mantine-color-scheme="dark"] .css-15vmawf{background-color:transparent;}[data-mantine-color-scheme="light"] .css-15vmawf{background-color:#f8f9fa;}.css-4g6ai3{cursor:pointer;}[data-mantine-color-scheme="light"] .css-cl9kin{-webkit-filter:invert(100%);filter:invert(100%);}[data-mantine-color-scheme="dark"] .css-k3gu75{color:#ffd43b;background-color:#2e2e2e;}[data-mantine-color-scheme="light"] .css-k3gu75{color:#228be6;background-color:#f8f9fa;}.css-15qwzfp{color:#fff;background-color:#5865F2;}.css-15qwzfp:hover{background-color:rgba(96, 109, 243, 1);}.css-mw5ny9{width:300px;-webkit-transform:translateX(100vw);-moz-transform:translateX(100vw);-ms-transform:translateX(100vw);transform:translateX(100vw);-webkit-transition:-webkit-transform 0.3s ease-in-out;transition:transform 0.3s ease-in-out;right:0;}[data-mantine-color-scheme="dark"] .css-mw5ny9{border-left:1px solid #424242;}[data-mantine-color-scheme="light"] .css-mw5ny9{border-left:1px solid #ced4da;}.css-mwent8{color:grey;}.css-81j1jw{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-ms-flex-pack:center;-webkit-justify-content:center;justify-content:center;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;}@media (max-width: 61.99375em){.css-81j1jw{height:10px;}}.css-coctn{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-ms-flex-pack:center;-webkit-justify-content:center;justify-content:center;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;}@media (min-width: 62em){.css-coctn{min-height:55vh;}}.css-n468in{background:transparent;border:none;outline:none;box-shadow:0 0 50px #1971c2,0 0 100px #1864ab,0 0 200px #1864ab;border-radius:10px;padding:10px;-webkit-transition:all 0.5s ease;transition:all 0.5s ease;}.css-n468in:hover{box-shadow:0 0 10px #1971c2,0 0 60px #1864ab,0 0 140px #1864ab;}.css-yjbvm5{text-align:center;position:absolute;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;-webkit-justify-content:center;justify-content:center;font-weight:800;font-size:calc(2.5rem * var(--mantine-scale));letter-spacing:-1px;margin-bottom:calc(0.625rem * var(--mantine-scale));font-family:Greycliff CF,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;}[data-mantine-color-scheme="dark"] .css-yjbvm5{color:#fff;}[data-mantine-color-scheme="light"] .css-yjbvm5{color:#000;}@media (max-width: 35.99375em){.css-yjbvm5{font-size:calc(1.75rem * var(--mantine-scale));}}.css-2eli5l{color:#339af0;text-decoration-style:wavy;text-decoration-color:#20c997;text-decoration-thickness:2px;text-decoration-line:underline;}.css-123nw27{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;-webkit-justify-content:center;justify-content:center;margin-bottom:calc(2rem * var(--mantine-scale));margin-top:calc(0.75rem * var(--mantine-scale));}@media (min-width: 62em){.css-123nw27{margin-top:calc(2rem * var(--mantine-scale));}}[data-mantine-color-scheme="dark"] .css-uigtmp{border-color:#424242;}[data-mantine-color-scheme="light"] .css-uigtmp{border-color:#ced4da;}@media (min-width: 48em){.css-uigtmp{max-width:400px;min-width:200px;}}.css-dsel73{padding-right:calc(0.875rem * var(--mantine-scale));height:calc(3rem * var(--mantine-scale));}.css-vl50i1{cursor:pointer;}[data-mantine-color-scheme="dark"] .css-vl50i1:hover{background:rgba(12, 133, 153, 0.4);}[data-mantine-color-scheme="light"] .css-vl50i1:hover{background:rgba(102, 217, 232, 0.4);}@media (min-width: 62em){.css-1l5zme{overflow-y:scroll;height:calc(8.4375rem * var(--mantine-scale));width:100%;}}</style></head><body><div id="__next"><style data-mantine-styles="true">:root{--mantine-color-discord-0: #5865F2;--mantine-color-discord-1: #5865F2;--mantine-color-discord-2: #5865F2;--mantine-color-discord-3: #5865F2;--mantine-color-discord-4: #5865F2;--mantine-color-discord-5: #5865F2;--mantine-color-discord-6: #5865F2;--mantine-color-discord-7: #5865F2;--mantine-color-discord-8: #5865F2;--mantine-color-discord-9: #5865F2;}:root[data-mantine-color-scheme="dark"]{--mantine-color-discord-text: var(--mantine-color-discord-4);--mantine-color-discord-filled: var(--mantine-color-discord-8);--mantine-color-discord-filled-hover: var(--mantine-color-discord-9);--mantine-color-discord-light: rgba(88, 101, 242, 0.15);--mantine-color-discord-light-hover: rgba(88, 101, 242, 0.2);--mantine-color-discord-light-color: var(--mantine-color-discord-3);--mantine-color-discord-outline: var(--mantine-color-discord-4);--mantine-color-discord-outline-hover: rgba(88, 101, 242, 0.05);}:root[data-mantine-color-scheme="light"]{--mantine-color-discord-text: var(--mantine-color-discord-filled);--mantine-color-discord-filled: var(--mantine-color-discord-6);--mantine-color-discord-filled-hover: var(--mantine-color-discord-7);--mantine-color-discord-light: rgba(88, 101, 242, 0.1);--mantine-color-discord-light-hover: rgba(88, 101, 242, 0.12);--mantine-color-discord-light-color: var(--mantine-color-discord-6);--mantine-color-discord-outline: var(--mantine-color-discord-6);--mantine-color-discord-outline-hover: rgba(88, 101, 242, 0.05);}</style><style data-mantine-styles="classes">@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}</style><script id="hookBeforeInstallPrompt">
-            window.process = {env: {VERSION: "11.0.4"}}
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault()
-                window.beforeinstallpromptEvent = e
-            })</script><main class="__className_d65c78"><style data-mantine-styles="inline">:root{--app-shell-navbar-width:calc(18.75rem * var(--mantine-scale));--app-shell-navbar-offset:calc(18.75rem * var(--mantine-scale));--app-shell-header-height:calc(3.4375rem * var(--mantine-scale));--app-shell-header-offset:calc(3.4375rem * var(--mantine-scale));--app-shell-padding:0px;}@media(min-width: 48em){:root{--app-shell-navbar-transform:translateX(calc(var(--app-shell-navbar-width) * -1));--app-shell-navbar-transform-rtl:translateX(var(--app-shell-navbar-width));--app-shell-navbar-offset:0px !important;}}@media(max-width: 47.99375em){:root{--app-shell-navbar-width:100%;--app-shell-navbar-offset:0px;--app-shell-navbar-transform:translateX(calc(var(--app-shell-navbar-width) * -1));--app-shell-navbar-transform-rtl:translateX(var(--app-shell-navbar-width));}}</style><div style="--app-shell-transition-duration:200ms;--app-shell-transition-timing-function:ease" class="m_89ab340 mantine-AppShell-root css-15vmawf" data-resizing="true"><header style="--app-shell-header-z-index:100;margin:0rem" class="m_3b16f56b mantine-AppShell-header right-scroll-bar-position app-header" data-with-border="true"><div style="align-items:center;justify-content:flex-end;flex-wrap:wrap;flex-direction:row;margin:var(--mantine-spacing-sm)" class="m_8bffd616 mantine-Flex-root __m__-R59mkrm"><div style="--group-gap:var(--mantine-spacing-md);--group-align:center;--group-justify:flex-start;--group-wrap:wrap" class="m_4081bf90 mantine-Group-root css-4g6ai3"><img style="--image-object-fit:contain;width:calc(6.25rem * var(--mantine-scale));height:calc(2.125rem * var(--mantine-scale))" class="m_9e117634 mantine-Image-root css-cl9kin" src="/images/logo-long.svg" alt="long text logo"/></div><div style="--group-gap:var(--mantine-spacing-md);--group-align:center;--group-justify:flex-start;--group-wrap:wrap;margin-left:auto" class="m_4081bf90 mantine-Group-root"><button style="--ai-size:var(--ai-size-lg);--ai-bg:var(--mantine-color-green-light);--ai-hover:var(--mantine-color-green-light-hover);--ai-color:var(--mantine-color-green-light-color);--ai-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="mantine-focus-auto mantine-active m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root" data-variant="light" data-size="lg" type="button"><span class="m_8d3afb97 mantine-ActionIcon-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="tabler-icon tabler-icon-ad-circle-filled "><path d="M12 2c5.523 0 10 4.477 10 10s-4.477 10 -10 10c-5.43 0 -9.848 -4.327 -9.996 -9.72l-.004 -.28l.004 -.28c.148 -5.393 4.566 -9.72 9.996 -9.72zm-3.5 6a2.5 2.5 0 0 0 -2.495 2.336l-.005 .164v4.5l.007 .117a1 1 0 0 0 1.986 0l.007 -.117v-1h1v1l.007 .117a1 1 0 0 0 1.986 0l.007 -.117v-4.5l-.005 -.164a2.5 2.5 0 0 0 -2.495 -2.336zm6.5 0h-1a1 1 0 0 0 -1 1v6a1 1 0 0 0 1 1h1a3 3 0 0 0 3 -3v-2a3 3 0 0 0 -3 -3zm0 2a1 1 0 0 1 1 1v2a1 1 0 0 1 -.883 .993l-.117 .007v-4zm-6.5 0a.5 .5 0 0 1 .492 .41l.008 .09v1.5h-1v-1.5l.008 -.09a.5 .5 0 0 1 .492 -.41z"></path></svg></span></button><button style="--ai-size:var(--ai-size-lg);--ai-color:var(--mantine-color-white)" class="mantine-focus-auto mantine-active m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root css-k3gu75" data-size="lg" type="button"><span class="m_8d3afb97 mantine-ActionIcon-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1.2rem" height="1.2rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-sun "><path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"></path><path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7"></path></svg></span></button><a style="--ai-color:var(--mantine-color-white)" class="mantine-focus-auto mantine-active m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root css-15qwzfp" href="https://discord.gg/bypass-city" target="_blank"><span class="m_8d3afb97 mantine-ActionIcon-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-brand-discord "><path d="M8 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"></path><path d="M14 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"></path><path d="M15.5 17c0 1 1.5 3 2 3c1.5 0 2.833 -1.667 3.5 -3c.667 -1.667 .5 -5.833 -1.5 -11.5c-1.457 -1.015 -3 -1.34 -4.5 -1.5l-.972 1.923a11.913 11.913 0 0 0 -4.053 0l-.975 -1.923c-1.5 .16 -3.043 .485 -4.5 1.5c-2 5.667 -2.167 9.833 -1.5 11.5c.667 1.333 2 3 3.5 3c.5 0 2 -2 2 -3"></path><path d="M7 16.5c3.5 1 6.5 1 10 0"></path></svg></span></a><button class="mantine-focus-auto m_fea6bf1a mantine-Burger-root m_87cf2631 mantine-UnstyledButton-root" type="button"><div class="m_d4fb9cad mantine-Burger-burger" data-reduce-motion="true"></div></button></div></div></header><nav style="--app-shell-navbar-z-index:calc(100 + 1);padding:var(--mantine-spacing-sm)" class="m_45252eee mantine-AppShell-navbar css-mw5ny9" data-with-border="true" hidden=""><div style="margin-inline:calc(var(--mantine-spacing-xs) * -1);padding-inline:var(--mantine-spacing-xs);--sa-corner-width:0px;--sa-corner-height:0px" class="m_6dcfc7c7 mantine-AppShell-section m_d57069b5 mantine-ScrollArea-root" data-grow="true"><div style="overflow-x:hidden;overflow-y:hidden" class="m_c0783ff9 mantine-ScrollArea-viewport" data-scrollbars="xy"><div style="min-width:100%;display:table"><a style="--nl-bg:var(--mantine-color-violet-light);--nl-hover:var(--mantine-color-violet-light-hover);--nl-color:var(--mantine-color-violet-light-color)" class="mantine-focus-auto NavLink_navLink__i_nya m_f0824112 mantine-NavLink-root m_87cf2631 mantine-UnstyledButton-root" data-variant="light" data-active="true" href="https://discord.gg/bypass-city" target="_blank" color="violet"><span class="m_690090b5 mantine-NavLink-section" data-position="left"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="tabler-icon tabler-icon-brand-discord-filled "><path d="M14.983 3l.123 .006c2.014 .214 3.527 .672 4.966 1.673a1 1 0 0 1 .371 .488c1.876 5.315 2.373 9.987 1.451 12.28c-1.003 2.005 -2.606 3.553 -4.394 3.553c-.732 0 -1.693 -.968 -2.328 -2.045a21.512 21.512 0 0 0 2.103 -.493a1 1 0 1 0 -.55 -1.924c-3.32 .95 -6.13 .95 -9.45 0a1 1 0 0 0 -.55 1.924c.717 .204 1.416 .37 2.103 .494c-.635 1.075 -1.596 2.044 -2.328 2.044c-1.788 0 -3.391 -1.548 -4.428 -3.629c-.888 -2.217 -.39 -6.89 1.485 -12.204a1 1 0 0 1 .371 -.488c1.439 -1.001 2.952 -1.459 4.966 -1.673a1 1 0 0 1 .935 .435l.063 .107l.651 1.285l.137 -.016a12.97 12.97 0 0 1 2.643 0l.134 .016l.65 -1.284a1 1 0 0 1 .754 -.54l.122 -.009zm-5.983 7a2 2 0 0 0 -1.977 1.697l-.018 .154l-.005 .149l.005 .15a2 2 0 1 0 1.995 -2.15zm6 0a2 2 0 0 0 -1.977 1.697l-.018 .154l-.005 .149l.005 .15a2 2 0 1 0 1.995 -2.15z"></path></svg></span><div class="m_f07af9d2 mantine-NavLink-body"><span class="m_1f6ac4c4 mantine-NavLink-label"><div style="--group-child-width:calc(100% - (var(--mantine-spacing-md) - var(--mantine-spacing-md) / 1));--group-gap:var(--mantine-spacing-md);--group-align:center;--group-justify:flex-start;--group-wrap:wrap" class="m_4081bf90 mantine-Group-root" data-grow="true"><p class="mantine-focus-auto m_b6d8b162 mantine-Text-root">Join Discord</p></div></span><span class="m_57492dcc mantine-NavLink-description" data-active="true"></span></div><span class="m_690090b5 mantine-NavLink-section" data-position="right"><div style="--badge-bg:transparent;--badge-color:var(--mantine-color-green-outline);--badge-bd:calc(0.0625rem * var(--mantine-scale)) solid var(--mantine-color-green-outline);background:var(--mantine-color-gray-filled)" class="m_347db0ec mantine-Badge-root" data-variant="outline"><span class="m_5add502a mantine-Badge-label">GET HELP</span></div></span></a><div style="box-sizing:border-box;opacity:0;transition:opacity 200ms ease;display:none;height:0;overflow:hidden" class="mantine-NavLink-collapse" aria-hidden="true"><div class="m_e17b862f mantine-NavLink-children"></div></div><a style="--nl-bg:transparent;--nl-hover:var(--mantine-color-red-light-hover);--nl-color:var(--mantine-color-red-light-color)" class="mantine-focus-auto NavLink_navLink__i_nya m_f0824112 mantine-NavLink-root m_87cf2631 mantine-UnstyledButton-root" data-variant="subtle" data-active="true" color="red" href="/donate"><span class="m_690090b5 mantine-NavLink-section" data-position="left"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-heart "><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"></path></svg></span><div class="m_f07af9d2 mantine-NavLink-body"><span class="m_1f6ac4c4 mantine-NavLink-label">Donate</span><span class="m_57492dcc mantine-NavLink-description" data-active="true">Crypto donations</span></div></a><div style="box-sizing:border-box;opacity:0;transition:opacity 200ms ease;display:none;height:0;overflow:hidden" class="mantine-NavLink-collapse" aria-hidden="true"><div class="m_e17b862f mantine-NavLink-children"></div></div><a style="--nl-bg:transparent;--nl-hover:var(--mantine-color-teal-light-hover);--nl-color:var(--mantine-color-teal-light-color)" class="mantine-focus-auto NavLink_navLink__i_nya m_f0824112 mantine-NavLink-root m_87cf2631 mantine-UnstyledButton-root" data-variant="subtle" data-active="true" color="teal" href="/how-to-install-userscript"><span class="m_690090b5 mantine-NavLink-section" data-position="left"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-download "><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"></path><path d="M7 11l5 5l5 -5"></path><path d="M12 4l0 12"></path></svg></span><div class="m_f07af9d2 mantine-NavLink-body"><span class="m_1f6ac4c4 mantine-NavLink-label">Get UserScript</span><span class="m_57492dcc mantine-NavLink-description" data-active="true">Bypass Linkvertise Faster</span></div></a><div style="box-sizing:border-box;opacity:0;transition:opacity 200ms ease;display:none;height:0;overflow:hidden" class="mantine-NavLink-collapse" aria-hidden="true"><div class="m_e17b862f mantine-NavLink-children"></div></div><a style="--nl-bg:transparent;--nl-hover:var(--mantine-color-orange-light-hover);--nl-color:var(--mantine-color-orange-light-color)" class="mantine-focus-auto NavLink_navLink__i_nya m_f0824112 mantine-NavLink-root m_87cf2631 mantine-UnstyledButton-root" data-variant="subtle" data-active="true" color="orange" target="_blank" href="https://forms.bypass.city/s/clyg55ma60001r0qmyoacfxag"><span class="m_690090b5 mantine-NavLink-section" data-position="left"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-question-mark "><path d="M8 8a3.5 3 0 0 1 3.5 -3h1a3.5 3 0 0 1 3.5 3a3 3 0 0 1 -2 3a3 4 0 0 0 -2 4"></path><path d="M12 19l0 .01"></path></svg></span><div class="m_f07af9d2 mantine-NavLink-body"><span class="m_1f6ac4c4 mantine-NavLink-label">Fill out Survey</span><span class="m_57492dcc mantine-NavLink-description" data-active="true">Help us to improve our service</span></div></a><div style="box-sizing:border-box;opacity:0;transition:opacity 200ms ease;display:none;height:0;overflow:hidden" class="mantine-NavLink-collapse" aria-hidden="true"><div class="m_e17b862f mantine-NavLink-children"></div></div><a style="--nl-bg:transparent;--nl-hover:var(--mantine-color-green-light-hover);--nl-color:var(--mantine-color-green-light-color)" class="mantine-focus-auto NavLink_navLink__i_nya m_f0824112 mantine-NavLink-root m_87cf2631 mantine-UnstyledButton-root" data-variant="subtle" data-active="true" color="green" href="https://www.trustpilot.com/review/bypass.city"><span class="m_690090b5 mantine-NavLink-section" data-position="left"><div style="--avatar-size:calc(1rem * var(--mantine-scale))" class="m_f85678b6 mantine-Avatar-root"><img class="m_11f8ac07 mantine-Avatar-image" src="/images/trustpilot.png"/></div></span><div class="m_f07af9d2 mantine-NavLink-body"><span class="m_1f6ac4c4 mantine-NavLink-label">Review us on Trustpilot</span><span class="m_57492dcc mantine-NavLink-description" data-active="true">Write us a review on Trustpilot</span></div></a><div style="box-sizing:border-box;opacity:0;transition:opacity 200ms ease;display:none;height:0;overflow:hidden" class="mantine-NavLink-collapse" aria-hidden="true"><div class="m_e17b862f mantine-NavLink-children"></div></div><a class="mantine-focus-auto NavLink_navLink__i_nya m_f0824112 mantine-NavLink-root m_87cf2631 mantine-UnstyledButton-root" href="/supported"><span class="m_690090b5 mantine-NavLink-section" data-position="left"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-world "><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"></path><path d="M3.6 9h16.8"></path><path d="M3.6 15h16.8"></path><path d="M11.5 3a17 17 0 0 0 0 18"></path><path d="M12.5 3a17 17 0 0 1 0 18"></path></svg></span><div class="m_f07af9d2 mantine-NavLink-body"><span class="m_1f6ac4c4 mantine-NavLink-label">Supported Bypasses</span><span class="m_57492dcc mantine-NavLink-description">Find out which sites are supported!</span></div></a><div style="box-sizing:border-box;opacity:0;transition:opacity 200ms ease;display:none;height:0;overflow:hidden" class="mantine-NavLink-collapse" aria-hidden="true"><div class="m_e17b862f mantine-NavLink-children"></div></div><a class="mantine-focus-auto NavLink_navLink__i_nya m_f0824112 mantine-NavLink-root m_87cf2631 mantine-UnstyledButton-root" href="/privacy-policy"><span class="m_690090b5 mantine-NavLink-section" data-position="left"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-file-text "><path d="M14 3v4a1 1 0 0 0 1 1h4"></path><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path><path d="M9 9l1 0"></path><path d="M9 13l6 0"></path><path d="M9 17l6 0"></path></svg></span><div class="m_f07af9d2 mantine-NavLink-body"><span class="m_1f6ac4c4 mantine-NavLink-label">Privacy Policy</span><span class="m_57492dcc mantine-NavLink-description"></span></div></a><div style="box-sizing:border-box;opacity:0;transition:opacity 200ms ease;display:none;height:0;overflow:hidden" class="mantine-NavLink-collapse" aria-hidden="true"><div class="m_e17b862f mantine-NavLink-children"></div></div><a class="mantine-focus-auto NavLink_navLink__i_nya m_f0824112 mantine-NavLink-root m_87cf2631 mantine-UnstyledButton-root" href="/terms-of-service"><span class="m_690090b5 mantine-NavLink-section" data-position="left"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-file-text "><path d="M14 3v4a1 1 0 0 0 1 1h4"></path><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path><path d="M9 9l1 0"></path><path d="M9 13l6 0"></path><path d="M9 17l6 0"></path></svg></span><div class="m_f07af9d2 mantine-NavLink-body"><span class="m_1f6ac4c4 mantine-NavLink-label">Terms of Service</span><span class="m_57492dcc mantine-NavLink-description"></span></div></a><div style="box-sizing:border-box;opacity:0;transition:opacity 200ms ease;display:none;height:0;overflow:hidden" class="mantine-NavLink-collapse" aria-hidden="true"><div class="m_e17b862f mantine-NavLink-children"></div></div><div style="--divider-border-style:solid;margin-block:var(--mantine-spacing-md)" class="m_3eebeb36 mantine-Divider-root" data-variant="solid" data-orientation="horizontal" role="separator"></div><div style="--switch-height:var(--switch-height-md);--switch-width:var(--switch-width-md);--switch-thumb-size:var(--switch-thumb-size-md);--switch-label-font-size:var(--switch-label-font-size-md);--switch-track-label-padding:var(--switch-track-label-padding-md);--switch-color:var(--mantine-color-dark-filled);--label-fz:var(--mantine-font-size-md);--label-lh:var(--label-lh-md);margin:var(--mantine-spacing-xs)" class="m_5f93f3bb mantine-Switch-root m_5f75b09e mantine-Switch-root" data-size="md" data-label-position="right"><label class="m_5f6e695e mantine-Switch-body" for="mantine-Rbkrbamkrm"><input id="mantine-Rbkrbamkrm" type="checkbox" role="switch" class="m_926b4011 mantine-Switch-input" checked=""/><div class="m_9307d992 mantine-Switch-track" data-label-position="right" aria-hidden="true"><span class="m_93039a1d mantine-Switch-thumb" data-reduce-motion="true"></span><span class="m_8277e082 mantine-Switch-trackLabel"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="#69db7c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-ad-circle "><path d="M12 12m-10 0a10 10 0 1 0 20 0a10 10 0 1 0 -20 0"></path><path d="M7 15v-4.5a1.5 1.5 0 0 1 3 0v4.5"></path><path d="M7 13h3"></path><path d="M14 9v6h1a2 2 0 0 0 2 -2v-2a2 2 0 0 0 -2 -2h-1z"></path></svg></span></div><div class="m_d3ea56bb mantine-Switch-labelWrapper"><span class="m_8ee546b8 mantine-Switch-label">Ads Enabled</span><p style="--input-description-size:calc(var(--mantine-font-size-md) - calc(0.125rem * var(--mantine-scale)))" class="m_328f68c0 mantine-Switch-description m_fe47ce59 mantine-InputWrapper-description" data-size="md">Help the site with Ads!</p></div></label></div></div></div></div><div class="m_6dcfc7c7 mantine-AppShell-section"><p class="mantine-focus-auto m_b6d8b162 mantine-Text-root css-mwent8">3af74978c8<!-- --> <!-- --> - <!-- -->11/20/2024, 6:29 PM</p></div></nav><main class="m_8983817 mantine-AppShell-main"><style data-mantine-styles="inline">.__m__-R3cmkrm{--grid-gutter:var(--mantine-spacing-md);}</style><div class="m_410352e9 mantine-Grid-root __m__-R3cmkrm"><div class="m_dee7bd2f mantine-Grid-inner"><style data-mantine-styles="inline">.__m__-R1mjcmkrm{--col-flex-grow:1;--col-flex-basis:25%;--col-max-width:100%;}</style><div class="m_96bdd299 mantine-Grid-col __m__-R1mjcmkrm css-81j1jw"></div><style data-mantine-styles="inline">.__m__-R2mjcmkrm{--col-flex-grow:1;--col-flex-basis:33.333333333333336%;--col-max-width:100%;}</style><div style="padding:calc(1.25rem * var(--mantine-scale))" class="m_96bdd299 mantine-Grid-col __m__-R2mjcmkrm css-coctn"><div style="--stack-gap:var(--mantine-spacing-md);--stack-align:stretch;--stack-justify:flex-start" class="m_6d731127 mantine-Stack-root"><div class="css-123nw27"><div class="css-yjbvm5"><p>Bypass <span class="css-2eli5l">Work.ink</span></p></div></div><div class="css-n468in m_46b77525 mantine-InputWrapper-root mantine-TextInput-root css-uigtmp"><div class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper" data-variant="default"><input class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input" data-variant="default" placeholder="enter a link to get started" aria-invalid="false" id="mantine-R7dmmjcmkrm" value=""/></div></div><a style="--button-height:var(--button-height-md);--button-padding-x:var(--button-padding-x-md);--button-fz:var(--mantine-font-size-md);--button-radius:var(--mantine-radius-md);--button-bg:linear-gradient(45deg, var(--mantine-color-indigo-filled) 0%, var(--mantine-color-cyan-filled) 100%);--button-hover:linear-gradient(45deg, var(--mantine-color-indigo-filled) 0%, var(--mantine-color-cyan-filled) 100%);--button-color:var(--mantine-color-white);--button-bd:none" class="mantine-focus-auto mantine-active next-t-cm m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root css-dsel73" data-variant="gradient" data-size="md" id="bypass-button" href="/bypass?bypass="><span class="m_80f1301b mantine-Button-inner"><span class="m_811560b9 mantine-Button-label">Bypass Link !</span></span></a><div style="--group-child-width:calc(50% - (var(--mantine-spacing-md) - var(--mantine-spacing-md) / 2));--group-gap:var(--mantine-spacing-md);--group-align:center;--group-justify:flex-start;--group-wrap:wrap" class="m_4081bf90 mantine-Group-root" data-grow="true"><a style="--button-height:var(--button-height-compact-md);--button-padding-x:var(--button-padding-x-compact-md);--button-fz:var(--mantine-font-size-md);--button-radius:var(--mantine-radius-md);--button-bg:transparent;--button-hover:var(--mantine-color-blue-light-hover);--button-color:var(--mantine-color-blue-light-color);--button-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="mantine-focus-auto mantine-active next-t-cm m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root" data-variant="subtle" data-size="compact-md" data-with-left-section="true" id="clipboard-button"><span class="m_80f1301b mantine-Button-inner"><span class="m_a74036a mantine-Button-section" data-position="left"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-clipboard "><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2"></path><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z"></path></svg></span><span class="m_811560b9 mantine-Button-label">From Clipboard</span></span></a><div style="--switch-color:var(--mantine-color-dark-filled)" class="m_5f93f3bb mantine-Switch-root m_5f75b09e mantine-Switch-root" data-label-position="right"><label class="m_5f6e695e mantine-Switch-body" for="mantine-Rardmmjcmkrm"><input id="mantine-Rardmmjcmkrm" type="checkbox" role="switch" class="m_926b4011 mantine-Switch-input"/><div class="m_9307d992 mantine-Switch-track" data-label-position="right" aria-hidden="true"><span class="m_93039a1d mantine-Switch-thumb" data-reduce-motion="true"></span><span class="m_8277e082 mantine-Switch-trackLabel"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="#228be6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-link-off "><path d="M9 15l3 -3m2 -2l1 -1"></path><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464"></path><path d="M3 3l18 18"></path><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463"></path></svg></span></div><div class="m_d3ea56bb mantine-Switch-labelWrapper"><span class="m_8ee546b8 mantine-Switch-label">Auto-Redirect</span></div></label></div></div><div style="--alert-radius:var(--mantine-radius-md);--alert-bg:var(--mantine-color-cyan-light);--alert-color:var(--mantine-color-cyan-light-color);--alert-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_66836ed3 mantine-Alert-root css-vl50i1" data-variant="light" id="mantine-Rddmmjcmkrm" role="alert" aria-describedby="mantine-Rddmmjcmkrm-body" aria-labelledby="mantine-Rddmmjcmkrm-title"><div class="m_a5d60502 mantine-Alert-wrapper"><div class="m_667f2a6a mantine-Alert-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-medal-2 "><path d="M9 3h6l3 7l-6 2l-6 -2z"></path><path d="M12 12l-3 -9"></path><path d="M15 11l-3 -8"></path><path d="M12 19.5l-3 1.5l.5 -3.5l-2 -2l3 -.5l1.5 -3l1.5 3l3 .5l-2 2l.5 3.5z"></path></svg></div><div class="m_667c2793 mantine-Alert-body"><div class="m_6a03f287 mantine-Alert-title"><span id="mantine-Rddmmjcmkrm-title" class="m_698f4f23 mantine-Alert-label">Try an example link!</span></div><div id="mantine-Rddmmjcmkrm-body" class="m_7fa78076 mantine-Alert-message" data-variant="light">We can bypass links most other bypasses can&#x27;t. <br/>Try the Example!</div></div></div></div></div></div><style data-mantine-styles="inline">.__m__-R3mjcmkrm{--col-flex-grow:1;--col-flex-basis:25%;--col-max-width:100%;}</style><div class="m_96bdd299 mantine-Grid-col __m__-R3mjcmkrm css-81j1jw"></div></div></div><div style="height:var(--mantine-spacing-md);min-height:var(--mantine-spacing-md)" class=""></div><div style="--container-size:var(--container-size-lg);padding-block:var(--mantine-spacing-xl)" class="m_7485cace mantine-Container-root" data-size="lg"><style data-mantine-styles="inline">.__m__-R2ncmkrm{--sg-spacing-x:var(--mantine-spacing-xl);--sg-spacing-y:var(--mantine-spacing-xl);--sg-cols:1;}@media(min-width: 62em){.__m__-R2ncmkrm{--sg-cols:3;}}</style><div style="margin-top:calc(3.125rem * var(--mantine-scale))" class="m_2415a157 mantine-SimpleGrid-root __m__-R2ncmkrm"><div style="--paper-radius:var(--mantine-radius-md);--paper-shadow:var(--mantine-shadow-md);--card-padding:var(--mantine-spacing-xl)" class="Feature_card__zTBzg m_e615b15f mantine-Card-root m_1b7284a3 mantine-Paper-root"><div style="gap:var(--mantine-spacing-md);align-items:center;flex-wrap:wrap;flex-direction:row" class="m_8bffd616 mantine-Flex-root __m__-Rddmncmkrm"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#228be6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-link " style="width:calc(2.5rem * var(--mantine-scale));height:calc(2.5rem * var(--mantine-scale))"><path d="M9 15l6 -6"></path><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464"></path><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463"></path></svg><a class="mantine-focus-auto m_849cf0da m_b6d8b162 mantine-Text-root mantine-Anchor-root" data-underline="hover" href="/supported"><p style="margin-top:var(--mantine-spacing-xs);font-size:var(--mantine-font-size-xl);font-weight:500" class="mantine-focus-auto Feature_cardTitle__NhT7D m_b6d8b162 mantine-Text-root">Supported Websites <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-external-link "><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"></path><path d="M11 13l9 -9"></path><path d="M15 4h5v5"></path></svg></p></a></div><ul style="--list-fz:var(--mantine-font-size-sm);--list-lh:var(--mantine-line-height-sm);--list-spacing:var(--mantine-spacing-xs);margin-top:var(--mantine-spacing-sm)" class="m_abbac491 mantine-List-root css-1l5zme" data-size="sm"><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">Linkvertise</span></div></li><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">Sub2Get</span></div></li><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">Lootlinks</span></div></li><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">AdFoc.us</span></div></li><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">Boost.ink</span></div></li><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">BoostFusedGT</span></div></li><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">leasurepartment.xyz</span></div></li><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">LetsBoost</span></div></li><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">mboost.me</span></div></li><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">Rekonise</span></div></li><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">shorte.st</span></div></li><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">Sub2Unlock.com</span></div></li><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">Sub2Unlock.net</span></div></li><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">v.gd</span></div></li><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">dragonslayer</span></div></li><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">tinyurl.com</span></div></li><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">bit.ly</span></div></li><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">is.gd</span></div></li><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">rebrand.ly</span></div></li><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">empebau.eu</span></div></li><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">socialwolvez.com</span></div></li><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">sub1s.com</span></div></li><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">tinylink.onl</span></div></li><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">google-url</span></div></li><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">Justpaste.it Redirect</span></div></li><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">SubFinal</span></div></li><li class="m_abb6bec2 mantine-List-item" data-with-icon="true"><div class="m_75cd9f71 mantine-List-itemWrapper"><span class="m_60f83e5b mantine-List-itemIcon"><div style="--ti-size:calc(1.5rem * var(--mantine-scale));--ti-radius:var(--mantine-radius-xl);--ti-bg:var(--mantine-color-teal-filled);--ti-color:var(--mantine-color-white);--ti-bd:calc(0.0625rem * var(--mantine-scale)) solid transparent" class="m_7341320d mantine-ThemeIcon-root" color="teal" radius="xl"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-circle-check "><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg></div></span><span class="mantine-List-itemLabel">Ad-Maven</span></div></li></ul></div><div style="--paper-radius:var(--mantine-radius-md);--paper-shadow:var(--mantine-shadow-md);--card-padding:var(--mantine-spacing-xl)" class="Feature_card__zTBzg m_e615b15f mantine-Card-root m_1b7284a3 mantine-Paper-root"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#228be6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-activity-heartbeat " style="width:calc(3.125rem * var(--mantine-scale));height:calc(3.125rem * var(--mantine-scale))"><path d="M3 12h4.5l1.5 -6l4 12l2 -9l1.5 3h4.5"></path></svg><p style="margin-top:var(--mantine-spacing-md);font-size:var(--mantine-font-size-lg);font-weight:500" class="mantine-focus-auto Feature_cardTitle__NhT7D m_b6d8b162 mantine-Text-root">Instant Response</p><p style="margin-top:var(--mantine-spacing-sm);color:var(--mantine-color-dimmed);font-size:var(--mantine-font-size-sm)" class="mantine-focus-auto m_b6d8b162 mantine-Text-root">bypass.city<!-- --> is a fast and responsive service that will get you the link you need in no time!<b> The bypass is instant and the link is ready to be used.</b></p></div><div style="--paper-radius:var(--mantine-radius-md);--paper-shadow:var(--mantine-shadow-md);--card-padding:var(--mantine-spacing-xl)" class="Feature_card__zTBzg m_e615b15f mantine-Card-root m_1b7284a3 mantine-Paper-root"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#228be6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-rosette-discount-check " style="width:calc(3.125rem * var(--mantine-scale));height:calc(3.125rem * var(--mantine-scale))"><path d="M5 7.2a2.2 2.2 0 0 1 2.2 -2.2h1a2.2 2.2 0 0 0 1.55 -.64l.7 -.7a2.2 2.2 0 0 1 3.12 0l.7 .7c.412 .41 .97 .64 1.55 .64h1a2.2 2.2 0 0 1 2.2 2.2v1c0 .58 .23 1.138 .64 1.55l.7 .7a2.2 2.2 0 0 1 0 3.12l-.7 .7a2.2 2.2 0 0 0 -.64 1.55v1a2.2 2.2 0 0 1 -2.2 2.2h-1a2.2 2.2 0 0 0 -1.55 .64l-.7 .7a2.2 2.2 0 0 1 -3.12 0l-.7 -.7a2.2 2.2 0 0 0 -1.55 -.64h-1a2.2 2.2 0 0 1 -2.2 -2.2v-1a2.2 2.2 0 0 0 -.64 -1.55l-.7 -.7a2.2 2.2 0 0 1 0 -3.12l.7 -.7a2.2 2.2 0 0 0 .64 -1.55v-1"></path><path d="M9 12l2 2l4 -4"></path></svg><p style="margin-top:var(--mantine-spacing-md);font-size:var(--mantine-font-size-lg);font-weight:500" class="mantine-focus-auto Feature_cardTitle__NhT7D m_b6d8b162 mantine-Text-root">Quick and Easy</p><p style="margin-top:var(--mantine-spacing-sm);color:var(--mantine-color-dimmed);font-size:var(--mantine-font-size-sm)" class="mantine-focus-auto m_b6d8b162 mantine-Text-root">bypass.city<!-- --> is a simple and easy to use service that will bypass supported link shorteners in no time!</p></div></div></div><div style="margin-top:var(--mantine-spacing-lg);margin-bottom:var(--mantine-spacing-lg)" class="m_7485cace mantine-Container-root"><h1 style="--title-fw:var(--mantine-h1-font-weight);--title-lh:var(--mantine-h1-line-height);--title-fz:var(--mantine-h1-font-size);margin-bottom:var(--mantine-spacing-xl);text-align:center" class="m_8a5d1357 mantine-Title-root" data-order="1">Frequently Asked Questions</h1><div class="m_9bdbb667 mantine-Accordion-root" data-variant="contained" id="mantine-Rapcmkrm" data-accordion="true"><div class="m_1f921b3b m_9bd7b098 mantine-Accordion-item" data-active="true"><button class="mantine-focus-auto m_4271d21b m_4ba585b8 mantine-Accordion-control m_87cf2631 mantine-UnstyledButton-root" data-accordion-control="true" data-active="true" data-chevron-position="right" type="button" aria-expanded="true" aria-controls="mantine-Rapcmkrm-panel-supported" id="mantine-Rapcmkrm-control-supported"><span class="m_3f35ae96 mantine-Accordion-chevron" data-rotate="true" data-position="right"><svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:calc(1rem * var(--mantine-scale));height:calc(1rem * var(--mantine-scale));display:block"><path d="M3.13523 6.15803C3.3241 5.95657 3.64052 5.94637 3.84197 6.13523L7.5 9.56464L11.158 6.13523C11.3595 5.94637 11.6759 5.95657 11.8648 6.15803C12.0536 6.35949 12.0434 6.67591 11.842 6.86477L7.84197 10.6148C7.64964 10.7951 7.35036 10.7951 7.15803 10.6148L3.15803 6.86477C2.95657 6.67591 2.94637 6.35949 3.13523 6.15803Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg></span><span class="m_df3ffa0f mantine-Accordion-label">What Ad-Link sites are supported ?</span></button><div style="box-sizing:border-box;opacity:1;transition:opacity 200ms ease" class="m_df78851f mantine-Accordion-panel" aria-hidden="false" role="region" id="mantine-Rapcmkrm-panel-supported" aria-labelledby="mantine-Rapcmkrm-control-supported"><div class="m_4ba554d4 mantine-Accordion-content"><p class="mantine-focus-auto m_b6d8b162 mantine-Text-root">We support many different Sites</p><p style="font-style:italic" class="mantine-focus-auto m_b6d8b162 mantine-Text-root">Including, linkvertise</p><p class="mantine-focus-auto m_b6d8b162 mantine-Text-root">... but also many others, like: Ad-Maven, adf.ly, AdFoc.us, AdShrink.it, boost.ink, BoostFusedGT, leasurepartment.xyz, LetsBoost MediaBooster, Rekonise, shorte.st/sh.st, Social Unlocks, Sub2Get, Sub2Unlock.com, Sub2Unlock.net and many more. Every ad-link site under the sun is probably supported and can be bypassed.</p></div></div></div><div class="m_1f921b3b m_9bd7b098 mantine-Accordion-item"><button class="mantine-focus-auto m_4271d21b m_4ba585b8 mantine-Accordion-control m_87cf2631 mantine-UnstyledButton-root" data-accordion-control="true" data-chevron-position="right" type="button" aria-expanded="false" aria-controls="mantine-Rapcmkrm-panel-ip-restrictions" id="mantine-Rapcmkrm-control-ip-restrictions"><span class="m_3f35ae96 mantine-Accordion-chevron" data-position="right"><svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:calc(1rem * var(--mantine-scale));height:calc(1rem * var(--mantine-scale));display:block"><path d="M3.13523 6.15803C3.3241 5.95657 3.64052 5.94637 3.84197 6.13523L7.5 9.56464L11.158 6.13523C11.3595 5.94637 11.6759 5.95657 11.8648 6.15803C12.0536 6.35949 12.0434 6.67591 11.842 6.86477L7.84197 10.6148C7.64964 10.7951 7.35036 10.7951 7.15803 10.6148L3.15803 6.86477C2.95657 6.67591 2.94637 6.35949 3.13523 6.15803Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg></span><span class="m_df3ffa0f mantine-Accordion-label">Are bypasses restricted ?</span></button><div style="box-sizing:border-box;opacity:0;transition:opacity 200ms ease;display:none;height:0;overflow:hidden" class="m_df78851f mantine-Accordion-panel" aria-hidden="true" role="region" id="mantine-Rapcmkrm-panel-ip-restrictions" aria-labelledby="mantine-Rapcmkrm-control-ip-restrictions"><div class="m_4ba554d4 mantine-Accordion-content"><p class="mantine-focus-auto m_b6d8b162 mantine-Text-root">No they are not!</p><p class="mantine-focus-auto m_b6d8b162 mantine-Text-root">We do not restrict any bypasses. You can bypass as many links as you want without any restrictions. We do not have any IP restrictions or any other restrictions. You can bypass as many links as you want.</p></div></div></div><div class="m_1f921b3b m_9bd7b098 mantine-Accordion-item"><button class="mantine-focus-auto m_4271d21b m_4ba585b8 mantine-Accordion-control m_87cf2631 mantine-UnstyledButton-root" data-accordion-control="true" data-chevron-position="right" type="button" aria-expanded="false" aria-controls="mantine-Rapcmkrm-panel-how-does-it-work" id="mantine-Rapcmkrm-control-how-does-it-work"><span class="m_3f35ae96 mantine-Accordion-chevron" data-position="right"><svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:calc(1rem * var(--mantine-scale));height:calc(1rem * var(--mantine-scale));display:block"><path d="M3.13523 6.15803C3.3241 5.95657 3.64052 5.94637 3.84197 6.13523L7.5 9.56464L11.158 6.13523C11.3595 5.94637 11.6759 5.95657 11.8648 6.15803C12.0536 6.35949 12.0434 6.67591 11.842 6.86477L7.84197 10.6148C7.64964 10.7951 7.35036 10.7951 7.15803 10.6148L3.15803 6.86477C2.95657 6.67591 2.94637 6.35949 3.13523 6.15803Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg></span><span class="m_df3ffa0f mantine-Accordion-label">How does it work ?</span></button><div style="box-sizing:border-box;opacity:0;transition:opacity 200ms ease;display:none;height:0;overflow:hidden" class="m_df78851f mantine-Accordion-panel" aria-hidden="true" role="region" id="mantine-Rapcmkrm-panel-how-does-it-work" aria-labelledby="mantine-Rapcmkrm-control-how-does-it-work"><div class="m_4ba554d4 mantine-Accordion-content">Bypass linkvertise in just a few clicks. Insert your link and enjoy the result. Our process makes it extremely easy to reach your destination quickly. No endless and anoying steps to get to your destination. Just one click and you are done.</div></div></div><div class="m_1f921b3b m_9bd7b098 mantine-Accordion-item"><button class="mantine-focus-auto m_4271d21b m_4ba585b8 mantine-Accordion-control m_87cf2631 mantine-UnstyledButton-root" data-accordion-control="true" data-chevron-position="right" type="button" aria-expanded="false" aria-controls="mantine-Rapcmkrm-panel-support-pastes" id="mantine-Rapcmkrm-control-support-pastes"><span class="m_3f35ae96 mantine-Accordion-chevron" data-position="right"><svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:calc(1rem * var(--mantine-scale));height:calc(1rem * var(--mantine-scale));display:block"><path d="M3.13523 6.15803C3.3241 5.95657 3.64052 5.94637 3.84197 6.13523L7.5 9.56464L11.158 6.13523C11.3595 5.94637 11.6759 5.95657 11.8648 6.15803C12.0536 6.35949 12.0434 6.67591 11.842 6.86477L7.84197 10.6148C7.64964 10.7951 7.35036 10.7951 7.15803 10.6148L3.15803 6.86477C2.95657 6.67591 2.94637 6.35949 3.13523 6.15803Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg></span><span class="m_df3ffa0f mantine-Accordion-label">Do we support Pastes ?</span></button><div style="box-sizing:border-box;opacity:0;transition:opacity 200ms ease;display:none;height:0;overflow:hidden" class="m_df78851f mantine-Accordion-panel" aria-hidden="true" role="region" id="mantine-Rapcmkrm-panel-support-pastes" aria-labelledby="mantine-Rapcmkrm-control-support-pastes"><div class="m_4ba554d4 mantine-Accordion-content"><b>Yes we do.</b> For linkvertise or other sites we will show you the pastes content after you bypassed the link. No extra steps needed. We also extract direct paste data from some common paste sites like pastebin.com, rentry.co, pastelink.com, justpaste.it ... the list goes on. Over 30 in total !</div></div></div><div class="m_1f921b3b m_9bd7b098 mantine-Accordion-item"><button class="mantine-focus-auto m_4271d21b m_4ba585b8 mantine-Accordion-control m_87cf2631 mantine-UnstyledButton-root" data-accordion-control="true" data-chevron-position="right" type="button" aria-expanded="false" aria-controls="mantine-Rapcmkrm-panel-errors" id="mantine-Rapcmkrm-control-errors"><span class="m_3f35ae96 mantine-Accordion-chevron" data-position="right"><svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:calc(1rem * var(--mantine-scale));height:calc(1rem * var(--mantine-scale));display:block"><path d="M3.13523 6.15803C3.3241 5.95657 3.64052 5.94637 3.84197 6.13523L7.5 9.56464L11.158 6.13523C11.3595 5.94637 11.6759 5.95657 11.8648 6.15803C12.0536 6.35949 12.0434 6.67591 11.842 6.86477L7.84197 10.6148C7.64964 10.7951 7.35036 10.7951 7.15803 10.6148L3.15803 6.86477C2.95657 6.67591 2.94637 6.35949 3.13523 6.15803Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg></span><span class="m_df3ffa0f mantine-Accordion-label">What if I get an error ?</span></button><div style="box-sizing:border-box;opacity:0;transition:opacity 200ms ease;display:none;height:0;overflow:hidden" class="m_df78851f mantine-Accordion-panel" aria-hidden="true" role="region" id="mantine-Rapcmkrm-panel-errors" aria-labelledby="mantine-Rapcmkrm-control-errors"><div class="m_4ba554d4 mantine-Accordion-content"><b>Don<!-- -->&#x27;<!-- -->t worry.</b> If you get an error, just try again. If the error persists, check if you entered the correct link.<br/>Other reasons may be that the site you are trying to bypass is not supported, the ad-link site you are trying to bypass is down or the link got removed.<br/><br/>If you have problems with bypassing a linkvertise, you also can try<!-- --> <a href="/how-to-install-userscript">our userscript.</a></div></div></div><div class="m_1f921b3b m_9bd7b098 mantine-Accordion-item"><button class="mantine-focus-auto m_4271d21b m_4ba585b8 mantine-Accordion-control m_87cf2631 mantine-UnstyledButton-root" data-accordion-control="true" data-chevron-position="right" type="button" aria-expanded="false" aria-controls="mantine-Rapcmkrm-panel-ads" id="mantine-Rapcmkrm-control-ads"><span class="m_3f35ae96 mantine-Accordion-chevron" data-position="right"><svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:calc(1rem * var(--mantine-scale));height:calc(1rem * var(--mantine-scale));display:block"><path d="M3.13523 6.15803C3.3241 5.95657 3.64052 5.94637 3.84197 6.13523L7.5 9.56464L11.158 6.13523C11.3595 5.94637 11.6759 5.95657 11.8648 6.15803C12.0536 6.35949 12.0434 6.67591 11.842 6.86477L7.84197 10.6148C7.64964 10.7951 7.35036 10.7951 7.15803 10.6148L3.15803 6.86477C2.95657 6.67591 2.94637 6.35949 3.13523 6.15803Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg></span><span class="m_df3ffa0f mantine-Accordion-label">Do we show ads ?</span></button><div style="box-sizing:border-box;opacity:0;transition:opacity 200ms ease;display:none;height:0;overflow:hidden" class="m_df78851f mantine-Accordion-panel" aria-hidden="true" role="region" id="mantine-Rapcmkrm-panel-ads" aria-labelledby="mantine-Rapcmkrm-control-ads"><div class="m_4ba554d4 mantine-Accordion-content">We show ads to help us pay for server costs and other expenses. We disable all ads once we reach our monthly funding goal. You can help us reach our goal by donating to the project.</div></div></div><div class="m_1f921b3b m_9bd7b098 mantine-Accordion-item"><button class="mantine-focus-auto m_4271d21b m_4ba585b8 mantine-Accordion-control m_87cf2631 mantine-UnstyledButton-root" data-accordion-control="true" data-chevron-position="right" type="button" aria-expanded="false" aria-controls="mantine-Rapcmkrm-panel-donate" id="mantine-Rapcmkrm-control-donate"><span class="m_3f35ae96 mantine-Accordion-chevron" data-position="right"><svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:calc(1rem * var(--mantine-scale));height:calc(1rem * var(--mantine-scale));display:block"><path d="M3.13523 6.15803C3.3241 5.95657 3.64052 5.94637 3.84197 6.13523L7.5 9.56464L11.158 6.13523C11.3595 5.94637 11.6759 5.95657 11.8648 6.15803C12.0536 6.35949 12.0434 6.67591 11.842 6.86477L7.84197 10.6148C7.64964 10.7951 7.35036 10.7951 7.15803 10.6148L3.15803 6.86477C2.95657 6.67591 2.94637 6.35949 3.13523 6.15803Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg></span><span class="m_df3ffa0f mantine-Accordion-label">How can I help ?</span></button><div style="box-sizing:border-box;opacity:0;transition:opacity 200ms ease;display:none;height:0;overflow:hidden" class="m_df78851f mantine-Accordion-panel" aria-hidden="true" role="region" id="mantine-Rapcmkrm-panel-donate" aria-labelledby="mantine-Rapcmkrm-control-donate"><div class="m_4ba554d4 mantine-Accordion-content"><b>There are many ways to help us.</b> You can help us by donating to the project, disabling your adblocker, bookmarking our page so you find us again or sharing our site with your friends.<div style="align-items:center;justify-content:flex-end;flex-direction:row;margin-top:var(--mantine-spacing-xl)" class="m_8bffd616 mantine-Flex-root __m__-R1rbtqpcmkrm"><a style="--button-bg:transparent;--button-hover:var(--mantine-color-red-outline-hover);--button-color:var(--mantine-color-red-outline);--button-bd:calc(0.0625rem * var(--mantine-scale)) solid var(--mantine-color-red-outline)" class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root" data-variant="outline" data-with-left-section="true" href="/donate"><span class="m_80f1301b mantine-Button-inner"><span class="m_a74036a mantine-Button-section" data-position="left"><svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-heart "><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"></path></svg></span><span class="m_811560b9 mantine-Button-label">Donate</span></span></a></div></div></div></div></div></div></main></div></main></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"preloadData":[{"name":"Linkvertise","domains":["linkvertise.com","linkvertise.download","adf.ly","link-center.net","link-target.net","link-hub.net","link-to.net","direct-link.net","file-link.net"]},{"name":"Sub2Get","domains":["sub2get.com"]},{"name":"Lootlinks","domains":["loot-links.com","loot-link.com","lootlinks.co","lootlink.org","lootdest.org","linksloot.net","links-loot.com","lootdest.com"]},{"name":"AdFoc.us","domains":["adfoc.us"]},{"name":"Boost.ink","domains":["boost.ink","bst.gg","bst.wtf","booo.st"]},{"name":"BoostFusedGT","domains":["boost.fusedgt.com"]},{"name":"leasurepartment.xyz","domains":["leasurepartment.xyz"]},{"name":"LetsBoost","domains":["letsboost.net"]},{"name":"mboost.me","domains":["mboost.me"]},{"name":"Rekonise","domains":["rekonise.com","rkns.link"]},{"name":"shorte.st","domains":["shorte.st","sh.st","gestyy.com","destyy.com"]},{"name":"Sub2Unlock.com","domains":["sub2unlock.com"]},{"name":"Sub2Unlock.net","domains":["sub2unlock.net"]},{"name":"v.gd","domains":["v.gd"]},{"name":"dragonslayer","domains":[]},{"name":"tinyurl.com","domains":["tinyurl.com"]},{"name":"bit.ly","domains":["bit.ly"]},{"name":"is.gd","domains":["is.gd"]},{"name":"rebrand.ly","domains":["rebrand.ly"]},{"name":"empebau.eu","domains":["empebau.eu"]},{"name":"socialwolvez.com","domains":["socialwolvez.com"]},{"name":"sub1s.com","domains":["sub1s.com"]},{"name":"tinylink.onl","domains":["tinylink.onl"]},{"name":"google-url","domains":["google.com"]},{"name":"Justpaste.it Redirect","domains":["justpaste.it"]},{"name":"SubFinal","domains":["subfinal.com","subtolink.com"]},{"name":"Ad-Maven","domains":["ad-maven.com"]}]},"__N_SSG":true},"page":"/","query":{},"buildId":"6aN3vaWEzmkQoPgymBMEC","isFallback":false,"gsp":true,"scriptLoader":[]}</script><!-- Cloudflare Pages Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3b4b9c0fea3d4d709426582e063a0961"}'></script><!-- Cloudflare Pages Analytics --><script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"8f6e625d99cddb1f","version":"2024.10.5","r":1,"token":"f4466853607d4c5c93ae55865099cec1","serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}}}' crossorigin="anonymous"></script>
-</body></html>
