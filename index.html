@@ -1,229 +1,378 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+
+<html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>绕过 API</title>
-    <!-- 样式部分保持不变 -->
-    <style>
-        body {
-            background-color: #000;
-            color: #fff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
 
-        .container {
-            width: 80%;
-            max-width: 800px;
-            text-align: center;
-        }
+  <meta charset="UTF-8">
 
-        h2 {
-            font-size: 2.5em;
-            margin-bottom: 30px;
-            color: transparent; /* 文本颜色设置为透明 */
-            background: linear-gradient(90deg, #64b5f6, #fff, #64b5f6); /* 蓝白渐变 */
-            background-size: 200% 100%; /* 背景大小 */
-            background-clip: text; /* 裁剪背景到文本区域 */
-            -webkit-background-clip: text; /* 兼容 Safari */
-            animation: gradientAnimation 3s linear infinite; /* 添加动画 */
-        }
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-        @keyframes gradientAnimation {
-            0% {
-                background-position: 100% 0; /* 背景起始位置 */
-            }
-            100% {
-                background-position: -100% 0; /* 背景结束位置 */
-            }
-        }
+  <title>Bypass Tool</title>
 
-        #urlInput {
-            width: 100%;
-            padding: 15px;
-            font-size: 1.2em;
-            margin: 20px 0;
-            background: #333;
-            border: 1px solid #444;
-            color: #fff;
-            border-radius: 5px;
-        }
+  <style>
 
-        .button-group {
-            margin: 30px 0;
-            gap: 20px;
-            display: flex;
-            justify-content: center;
-        }
+    /* [Unchanged CSS] */
 
-        button {
-            padding: 15px 30px;
-            font-size: 1.1em;
-            background: #555;
-            color: #fff;
-            border: 2px solid #777;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-            box-shadow: 0 0 8px rgba(119, 119, 119, 0.3);
-        }
+    * {
 
-        button:hover {
-            background: #777;
-            border-color: #999;
-            box-shadow: 0 0 12px rgba(153, 153, 153, 0.5);
-        }
+      margin: 0;
 
-        button:active {
-            transform: scale(0.95);
-            background: #444;
-            box-shadow: 0 0 6px rgba(119, 119, 119, 0.5);
-        }
+      padding: 0;
 
-        #output {
-            width: 100%;
-            padding: 20px;
-            font-size: 1.1em;
-            background: #333;
-            border: 1px solid #444;
-            color: #fff;
-            border-radius: 5px;
-            margin-top: 20px;
-            min-height: 150px;
-        }
+      box-sizing: border-box;
 
-        audio {
-            width: 100%;
-            margin-top: 20px;
-        }
-    </style>
+    }
+
+    body {
+
+      font-family: 'Roboto', sans-serif;
+
+      background: linear-gradient(135deg, #1a1a1a, #1a1a1a);
+
+      color: #fff;
+
+      display: flex;
+
+      justify-content: center;
+
+      align-items: center;
+
+      height: 100vh;
+
+      margin: 0;
+
+      overflow: hidden;
+
+      animation: fadeIn 1s ease-in-out;
+
+    }
+
+    .container {
+
+      text-align: center;
+
+      width: 100%;
+
+      max-width: 700px;
+
+      padding: 30px;
+
+      background: rgba(0, 0, 0, 0.7);
+
+      border-radius: 15px;
+
+      box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+
+      animation: slideUp 1s ease-out;
+
+    }
+
+    h1 {
+
+      font-size: 2.8rem;
+
+      font-weight: 700;
+
+      margin-bottom: 20px;
+
+      letter-spacing: 1px;
+
+      color: #fff;
+
+      animation: fadeInText 1s ease-in-out;
+
+    }
+
+    p {
+
+      font-size: 1.1rem;
+
+      color: #ddd;
+
+      margin-bottom: 30px;
+
+      animation: fadeInText 1.5s ease-in-out;
+
+    }
+
+    .input-container {
+
+      display: flex;
+
+      justify-content: center;
+
+      gap: 20px;
+
+      margin-bottom: 40px;
+
+      animation: fadeInText 2s ease-in-out;
+
+    }
+
+    input {
+
+      padding: 12px;
+
+      width: 70%;
+
+      border: none;
+
+      border-radius: 8px;
+
+      background-color: #444;
+
+      color: #fff;
+
+      font-size: 1.1rem;
+
+      transition: all 0.3s ease;
+
+    }
+
+    input:focus {
+
+      outline: none;
+
+      border-color: #1a1a1a;
+
+      box-shadow: 0 0 10px rgba(26, 26, 26, 0.8);
+
+    }
+
+    button {
+
+      padding: 12px 30px;
+
+      font-size: 1.2rem;
+
+      background-color: #8e24aa;
+
+      color: #fff;
+
+      border: none;
+
+      border-radius: 8px;
+
+      cursor: pointer;
+
+      transition: transform 0.3s ease, background-color 0.3s ease;
+
+    }
+
+    button:hover {
+
+      transform: translateY(-4px);
+
+      background-color: #6a1b9a;
+
+    }
+
+    button:active {
+
+      transform: translateY(2px);
+
+    }
+
+    .result-container {
+
+      display: none;
+
+      margin-top: 30px;
+
+      background: #333;
+
+      padding: 20px;
+
+      border-radius: 10px;
+
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+
+      max-height: 200px; /* Added to limit height */
+
+      overflow-y: auto; /* Scrollable container */
+
+      position: relative; /* Added for copy button positioning */
+
+    }
+
+    pre {
+
+      word-wrap: break-word;
+
+      white-space: pre-wrap;
+
+      font-size: 1rem;
+
+    }
+
+    .copy-button {
+
+      position: absolute;
+
+      top: 10px;
+
+      right: 10px;
+
+      background-color: #4caf50;
+
+      color: #fff;
+
+      border: none;
+
+      border-radius: 5px;
+
+      padding: 5px 10px;
+
+      cursor: pointer;
+
+      font-size: 0.9rem;
+
+    }
+
+    .copy-button:hover {
+
+      background-color: #45a049;
+
+    }
+
+    footer {
+
+      margin-top: 30px;
+
+      font-size: 0.9rem;
+
+      color: #ccc;
+
+    }
+
+  </style>
+
 </head>
+
 <body>
-    <div class="container">
-        <h2>绕过 URL</h2>
-        <input type="text" id="urlInput" placeholder="在此输入 URL">
-        <div class="button-group">
-            <button onclick="bypassUrl()">绕过</button>
-            <button onclick="clearFields()">清空</button>
-            <button onclick="navigateToResponse()">转到响应</button>
-            <button onclick="copyOutput()">复制</button>
-            <button onclick="pasteFromClipboard()">粘贴</button> <!-- 新增粘贴按钮 -->
-        </div>
-        <textarea id="output" rows="5" cols="50" readonly placeholder="绕过后的 URL 将显示在此处..."></textarea>
-        
-        <!-- 添加音乐播放器 -->
-        <audio id="audioPlayer" controls autoplay loop>
-            <source src="https://raw.githubusercontent.com/FCSDSSS/c/main/当羞涩不再禁锢_清流也是一种罪-张志成-387944592-320.mp3" type="audio/mpeg">
-            您的浏览器不支持音频播放。
-        </audio>
-    </div>
 
-    <script>
-        async function bypassUrl() {
-            const urlInput = document.getElementById('urlInput').value;
-            const output = document.getElementById('output');
+  <div class="container">
 
-            if (!urlInput) {
-                alert('请先输入一个 URL。');
-                return;
-            }
+    <header>
 
-            try {
-                // 调用 API
-                const apiUrl = `http://helya.pylex.xyz:10234/api/addlink?url=
+      <h1>Shadow's Bypasser 馃敁</h1>
 
-http://helya.pylex.xyz:10234/api/supported=${encodeURIComponent(urlInput)}`;
-                const response = await fetch(apiUrl);
+      <p>Enter a link below to bypass:</p>
 
-                if (!response.ok) {
-                    throw new Error(`API 请求失败: ${response.statusText}`);
-                }
+    </header>
 
-                const data = await response.json();
+    <main>
 
-                // 假设 API 返回的 URL 在 "url" 字段中
-                if (data.url) {
-                    // 清理 URL，去掉后面的 "success"、"true" 和引号等无关内容
-                    const cleanedUrl = cleanUrl(data.url);
-                    output.value = cleanedUrl;
-                } else {
-                    // 如果字段名不是 "url"，尝试从 JSON 数据中查找 URL
-                    const urlRegex = /https?:\/\/[^\s"]+/; // 匹配 URL 的正则表达式
-                    const urlMatch = JSON.stringify(data).match(urlRegex);
+      <div class="input-container">
 
-                    if (urlMatch) {
-                        // 清理 URL，去掉后面的 "success"、"true" 和引号等无关内容
-                        const cleanedUrl = cleanUrl(urlMatch[0]);
-                        output.value = cleanedUrl;
-                    } else {
-                        throw new Error('未找到绕过后的 URL。');
-                    }
-                }
-            } catch (error) {
-                output.value = `错误: ${error.message}`;
-            }
-        }
+        <input type="text" id="urlInput" placeholder="Enter the link here" />
 
-        function cleanUrl(url) {
-            // 去掉 URL 后面的 "success"、"true" 和引号等无关内容
-            return url.replace(/["\s,].*$/, ''); // 去掉引号、空格和逗号及其后面的内容
-        }
+        <button id="bypassButton">Bypass</button>
 
-        function clearFields() {
-            document.getElementById('urlInput').value = '';
-            document.getElementById('output').value = '';
-        }
+      </div>
 
-        function navigateToResponse() {
-            const output = document.getElementById('output').value;
+      <div id="resultContainer" class="result-container">
 
-            if (output && output.startsWith('http')) {
-                window.open(output, '_blank'); // 在新标签页中打开 URL
-            } else {
-                alert('未找到有效的 URL，请先点击“绕过”按钮。');
-            }
-        }
+        <h3>Result:</h3>
 
-        function copyOutput() {
-            const output = document.getElementById('output').value;
+        <pre id="resultText">Processing URL...</pre>
 
-            if (output && output.startsWith('http')) {
-                navigator.clipboard.writeText(output)
-                    .then(() => {
-                        alert('URL 已复制到剪贴板！');
-                    })
-                    .catch(() => {
-                        alert('复制失败，请手动复制。');
-                    });
-            } else {
-                alert('没有可复制的 URL，请先点击“绕过”按钮。');
-            }
-        }
+        <button class="copy-button" id="copyButton">Copy</button>
 
-        // 新增粘贴函数
-        async function pasteFromClipboard() {
-            try {
-                const text = await navigator.clipboard.readText(); // 读取剪切板内容
-                document.getElementById('urlInput').value = text; // 将内容粘贴到输入框
-            } catch (error) {
-                alert('无法读取剪切板内容，请手动粘贴。');
-            }
-        }
+      </div>
 
-        // 如果音频没有自动播放，用户点击页面后开始播放
-        const audioPlayer = document.getElementById('audioPlayer');
-        document.body.addEventListener('click', () => {
-            if (audioPlayer.paused) {
-                audioPlayer.play();
-            }
+    </main>
+
+    <footer>
+
+      <p>Skidded By @sky.jschillin</p>
+
+    </footer>
+
+  </div>
+
+  <script type="36b6fd99773f49acac72cd2d-text/javascript">
+
+    async function bypassUrl(url) {
+
+      const ethosApi = "https://ethos.kys.gay/api/bypass?url=";
+
+      const trollwareApi = "http://fi8.bot-hosting.net:20986/api/trollware/bypass?url=";
+
+      const ethosApiKey = "gay";
+
+      try {
+
+        // Try Ethos API first
+
+        const ethosResponse = await fetch(`${ethosApi}${encodeURIComponent(url)}`, {
+
+          headers: { "x-api-key": ethosApiKey }
+
         });
-    </script>
-</body>
+
+        const ethosData = await ethosResponse.json();
+
+        if (ethosData.result) return ethosData.result;
+
+        // If Ethos API fails, fallback to Trollware API
+
+        const trollwareResponse = await fetch(`${trollwareApi}${encodeURIComponent(url)}`);
+
+        const trollwareData = await trollwareResponse.json();
+
+        return trollwareData.result || "Unsupported URL Provided.";
+
+      } catch (error) {
+
+        return "An error occurred. Please try again.";
+
+      }
+
+    }
+
+    document.getElementById('bypassButton').addEventListener('click', async function() {
+
+      const url = document.getElementById('urlInput').value;
+
+      if (url) {
+
+        const resultContainer = document.getElementById('resultContainer');
+
+        const resultText = document.getElementById('resultText');
+
+        resultText.textContent = "Processing URL...";
+
+        resultContainer.style.display = 'block';
+
+        const result = await bypassUrl(url);
+
+        resultText.textContent = result;
+
+      } else {
+
+        alert("Please enter a valid URL.");
+
+      }
+
+    });
+
+    document.getElementById('copyButton').addEventListener('click', function() {
+
+      const resultText = document.getElementById('resultText').textContent;
+
+      navigator.clipboard.writeText(resultText).catch(err => {
+
+        console.error("Failed to copy to clipboard:", err);
+
+      });
+
+    });
+
+  </script>
+
+<script src="/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js" data-cf-settings="36b6fd99773f49acac72cd2d-|49" defer></script></body>
+
 </html>
