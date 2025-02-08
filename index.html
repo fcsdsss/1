@@ -137,7 +137,9 @@
 
             try {
                 // 调用 API
-                const apiUrl = `http://helya.pylex.xyz:10234/api/addlink?url=${encodeURIComponent(urlInput)}`;
+                const apiUrl = `http://helya.pylex.xyz:10234/api/addlink?url=
+
+http://helya.pylex.xyz:10234/api/supported=${encodeURIComponent(urlInput)}`;
                 const response = await fetch(apiUrl);
 
                 if (!response.ok) {
