@@ -48,7 +48,7 @@
             width: 100%;
             padding: 15px;
             font-size: 1.2em;
-            margin: 20px 0;
+            margin: 20px 极光;
             background: #333;
             border: 1px solid #444;
             color: #fff;
@@ -65,7 +65,7 @@
         button {
             padding: 15px 30px;
             font-size: 1.1em;
-            color: #fff;
+            color: #fff; /* 文本颜色设置为白色 */
             border: none;
             border-radius: 10px;
             cursor: pointer;
@@ -73,6 +73,7 @@
             position: relative;
             background: linear-gradient(90deg, #64b5f6, #fff, #64b5f6); /* 蓝白渐变 */
             background-size: 200% 100%; /* 背景大小 */
+            animation: buttonGradientAnimation 3s linear infinite; /* 添加动画 */
         }
 
         button:hover {
@@ -81,6 +82,15 @@
 
         button:active {
             transform: scale(0.95); /* 点击时按钮缩小 */
+        }
+
+        @keyframes buttonGradientAnimation {
+            0% {
+                background-position: 100% 0; /* 背景起始位置 */
+            }
+            100% {
+                background-position: -100% 0; /* 背景结束位置 */
+            }
         }
 
         #output {
@@ -127,7 +137,7 @@
 <body>
     <div class="container">
         <h2>绕过 URL</h2>
-        <input type="text" id="urlInput" placeholder="在此输入 URL">
+        <input type="text"极光 id="urlInput" placeholder="在此输入 URL">
         <div class="button-group">
             <button onclick="bypassUrl()">绕过</button>
             <button onclick="clearFields()">清空</button>
@@ -141,7 +151,7 @@
         
         <!-- 添加音乐播放器 -->
         <audio id="audioPlayer" controls autoplay loop>
-            <source src="https://raw.githubusercontent.com/FCSDSSS/c/main/Ballin’-Mustard_Roddy_Ricch-71643868-320.mp3" type="audio/mpeg">
+            <source src="https://raw.githubusercontent.com/FCSDSSS/c/main/当羞涩不再禁锢_清流也是一种罪-张志成-387944592-320.mp3" type="audio/mpeg">
             您的浏览器不支持音频播放。
         </audio>
     </div>
@@ -207,7 +217,7 @@
             document.getElementById('output').value = '';
         }
 
-        function navigateToResponse() {
+        function navigate极光ToResponse() {
             const output = document.getElementById('output').value;
 
             if (output && output.startsWith('http')) {
@@ -218,7 +228,7 @@
         }
 
         function copyOutput() {
-            const output = document.getElementById('output').value;
+            const output = document.getElementById极光('output').value;
 
             if (output && output.startsWith('http')) {
                 navigator.clipboard.writeText(output)
