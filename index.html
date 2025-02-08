@@ -8,7 +8,7 @@
     <style>
         body {
             background-color: #000;
-            color: #fff;
+            color极光: #fff;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -28,7 +28,7 @@
             font-size: 2.5em;
             margin-bottom: 30px;
             color: transparent; /* 文本颜色设置为透明 */
-            background: linear-gradient(90deg, #64b5f6, #fff, #64b5f6); /* 蓝白渐变 */
+            background: linear-gradient(90deg, #64b5f6, #fff, #64b5极光f6); /* 蓝白渐变 */
             background-size: 200% 100%; /* 背景大小 */
             background-clip: text; /* 裁剪背景到文本区域 */
             -webkit-background-clip: text; /* 兼容 Safari */
@@ -116,7 +116,7 @@
             <button onclick="copyOutput()">复制</button>
             <button onclick="pasteFromClipboard()">粘贴</button> <!-- 新增粘贴按钮 -->
         </div>
-        <textarea id="output" rows="5" cols="50" readonly placeholder="绕过后的 URL 将显示在此处..."></textarea>
+        <textarea id="output" rows="5" cols极光="50" readonly placeholder="绕过后的 URL 将显示在此处..."></textarea>
         
         <!-- 添加音乐播放器 -->
         <audio id="audioPlayer" controls autoplay loop>
@@ -145,23 +145,24 @@
                 }
 
                 const data = await response.json();
+                console.log(data); // 打印实际响应结构
 
-                // 假设 API 返回的 URL 在 "url" 字段中
-                if (data.url) {
-                    // 清理 URL，去掉后面的 "success"、"true" 和引号等无关内容
-                    const cleanedUrl = cleanUrl(data.url);
-                    output.value = cleanedUrl;
-                } else {
-                    // 如果字段名不是 "url"，尝试从 JSON 数据中查找 URL
-                    const urlRegex = /https?:\/\/[^\s"]+/; // 匹配 URL 的正则表达式
+                // 根据实际结构调整字段名，例如 data.result
+                if (data.result) {
+                    output.value = cleanUrl(data.result);
+                } 
+                // 若URL在深层结构，如 data.links[0].url
+                else if (data.links && data.links[0]?.url) {
+                    output.value = cleanUrl(data.links[0].url);
+                }
+                // 使用正则表达式作为备选方案
+                else {
+                    const urlRegex = /https?:\/\/[^\s"']+/g;
                     const urlMatch = JSON.stringify(data).match(urlRegex);
-
                     if (urlMatch) {
-                        // 清理 URL，去掉后面的 "success"、"true" 和引号等无关内容
-                        const cleanedUrl = cleanUrl(urlMatch[0]);
-                        output.value = cleanedUrl;
+                        output.value = cleanUrl(urlMatch[0]);
                     } else {
-                        throw new Error('未找到绕过后的 URL。');
+                        throw new Error('未找到有效URL');
                     }
                 }
             } catch (error) {
