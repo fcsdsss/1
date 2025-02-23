@@ -1,223 +1,227 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The #1 Ad links Bypasser | Bypass.vip - Best Linkvertise, Lootlinks, Paster.so, Work.ink bypasser & more!
-    </title>
+    <title>绕过 API</title>
+    <!-- 样式部分保持不变 -->
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
 
-    <!-- SEO Meta Tags -->
-    <meta name="description"
-        content="Instantly bypass Linkvertise, Work.ink, Lootlinks and other ad-links for free. No waiting, no surveys - get direct access to your links. Fast, reliable & secure bypasser tool.">
-    <meta name="keywords"
-        content="Linkvertise bypass, Linkvertise bypasser, skip Linkvertise, bypass Linkvertise, Lootlinks bypass, Lootlinks bypasser, skip Lootlinks, bypass Lootlinks, Paster.so bypass, Paster.so bypasser, skip Paster.so, bypass Paster.so, Work.ink bypass, Work.ink bypasser, skip Work.ink, bypass Work.ink, ad-link bypasser, link shortener bypass, free bypass service, instant bypass, no survey bypass">
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-    <meta name="author" content="bypass.vip">
-    <meta name="language" content="English">
-    <meta name="revisit-after" content="7 days">
-    <meta name="googlebot" content="index, follow">
-    <meta name="bingbot" content="index, follow">
+        .container {
+            width: 80%;
+            max-width: 800px;
+            text-align: center;
+        }
 
-    <!-- Additional SEO Meta Tags -->
-    <link rel="alternate" hreflang="x-default" href="https://bypass.vip">
-    <link rel="alternate" hreflang="en" href="https://bypass.vip">
-    <meta name="theme-color" content="#010101">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="format-detection" content="telephone=no">
+        h2 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            color: transparent; /* 文本颜色设置为透明 */
+            background: linear-gradient(90deg, #64b5f6, #fff, #64b5f6); /* 蓝白渐变 */
+            background-size: 200% 100%; /* 背景大小 */
+            background-clip: text; /* 裁剪背景到文本区域 */
+            -webkit-background-clip: text; /* 兼容 Safari */
+            animation: gradientAnimation 3s linear infinite; /* 添加动画 */
+        }
 
-    <!-- Open Graph / Social Media Meta Tags -->
-    <meta property="og:title"
-        content="The #1 Ad links Bypasser  | Bypass.vip - Best Linkvertise, Lootlinks, Paster.so, Work.ink bypasser & more!">
-    <meta property="og:description"
-        content="Free ad-link bypasser - Skip ads and get your links instantly. The fastest way to bypass ad-links. Linkvertise, Lootlinks, Paster.so, Work.ink bypasser & more!">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://bypass.vip">
-    <meta property="og:image" content="assets/img/favicon-dark.png">
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 100% 0; /* 背景起始位置 */
+            }
+            100% {
+                background-position: -100% 0; /* 背景结束位置 */
+            }
+        }
 
-    <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title"
-        content="The #1 Ad links Bypasser  | Bypass.vip - Best Linkvertise, Lootlinks, Paster.so, Work.ink bypasser & more!">
-    <meta name="twitter:description"
-        content="Free ad-link bypasser - Skip ads and earn links instantly. The fastest way to bypass ad-links. Linkvertise, Lootlinks, Paster.so, Work.ink bypasser & more!">
-    <meta name="twitter:image" content="assets/img/favicon-dark.png">
+        #urlInput {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            margin: 20px 0;
+            background: #333;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 5px;
+        }
 
-    <!-- Extra Meta Tags -->
-    <meta name="rating" content="general">
-    <meta name="application-name" content="Bypass.vip">
-    <meta property="og:locale" content="en_US">
-    <meta property="og:site_name" content="Bypass.vip">
-    <meta property="og:url" content="https://bypass.vip">
-    <meta property="og:image" content="assets/img/favicon-dark.png">
+        .button-group {
+            margin: 30px 0;
+            gap: 20px;
+            display: flex;
+            justify-content: center;
+        }
 
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://bypass.vip">
+        button {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            background: #555;
+            color: #fff;
+            border: 2px solid #777;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            box-shadow: 0 0 8px rgba(119, 119, 119, 0.3);
+        }
 
-    <!-- Robots.txt -->
-    <meta name="robots" content="index, follow">
+        button:hover {
+            background: #777;
+            border-color: #999;
+            box-shadow: 0 0 12px rgba(153, 153, 153, 0.5);
+        }
 
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="/assets/css/styles.css">
+        button:active {
+            transform: scale(0.95);
+            background: #444;
+            box-shadow: 0 0 6px rgba(119, 119, 119, 0.5);
+        }
 
-    <!-- Favicon links -->
-    <link rel="icon" href="/assets/img/favicon-dark.ico">
+        #output {
+            width: 100%;
+            padding: 20px;
+            font-size: 1.1em;
+            background: #333;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 5px;
+            margin-top: 20px;
+            min-height: 150px;
+        }
 
-    <!-- Compatibility -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="preconnect" href="https://www.google.com">
-    <link rel="dns-prefetch" href="https://www.google.com">
-<script data-cfasync="false" nonce="97558dbb-7e50-48f6-b1ed-bfefd2501153">try{(function(w,d){!function(j,k,l,m){if(j.zaraz)console.error("zaraz is loaded twice");else{j[l]=j[l]||{};j[l].executed=[];j.zaraz={deferred:[],listeners:[]};j.zaraz._v="5850";j.zaraz._n="97558dbb-7e50-48f6-b1ed-bfefd2501153";j.zaraz.q=[];j.zaraz._f=function(n){return async function(){var o=Array.prototype.slice.call(arguments);j.zaraz.q.push({m:n,a:o})}};for(const p of["track","set","debug"])j.zaraz[p]=j.zaraz._f(p);j.zaraz.init=()=>{var q=k.getElementsByTagName(m)[0],r=k.createElement(m),s=k.getElementsByTagName("title")[0];s&&(j[l].t=k.getElementsByTagName("title")[0].text);j[l].x=Math.random();j[l].w=j.screen.width;j[l].h=j.screen.height;j[l].j=j.innerHeight;j[l].e=j.innerWidth;j[l].l=j.location.href;j[l].r=k.referrer;j[l].k=j.screen.colorDepth;j[l].n=k.characterSet;j[l].o=(new Date).getTimezoneOffset();if(j.dataLayer)for(const t of Object.entries(Object.entries(dataLayer).reduce(((u,v)=>({...u[1],...v[1]})),{})))zaraz.set(t[0],t[1],{scope:"page"});j[l].q=[];for(;j.zaraz.q.length;){const w=j.zaraz.q.shift();j[l].q.push(w)}r.defer=!0;for(const x of[localStorage,sessionStorage])Object.keys(x||{}).filter((z=>z.startsWith("_zaraz_"))).forEach((y=>{try{j[l]["z_"+y.slice(7)]=JSON.parse(x.getItem(y))}catch{j[l]["z_"+y.slice(7)]=x.getItem(y)}}));r.referrerPolicy="origin";r.src="/trk/m.js?z="+btoa(encodeURIComponent(JSON.stringify(j[l])));q.parentNode.insertBefore(r,q)};["complete","interactive"].includes(k.readyState)?zaraz.init():j.addEventListener("DOMContentLoaded",zaraz.init)}}(w,d,"zarazData","script");window.zaraz._p=async bs=>new Promise((bt=>{if(bs){bs.e&&bs.e.forEach((bu=>{try{const bv=d.querySelector("script[nonce]"),bw=bv?.nonce||bv?.getAttribute("nonce"),bx=d.createElement("script");bw&&(bx.nonce=bw);bx.innerHTML=bu;bx.onload=()=>{d.head.removeChild(bx)};d.head.appendChild(bx)}catch(by){console.error(`Error executing script: ${bu}\n`,by)}}));Promise.allSettled((bs.f||[]).map((bz=>fetch(bz[0],bz[1]))))}bt()}));zaraz._p({"e":["(function(w,d){})(window,document)"]});})(window,document)}catch(e){throw fetch("/trk/t.js"),e;};</script></head>
-
+        audio {
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
 <body>
-    <header>
-        <nav>
-            <button class="hamburger-menu" aria-label="Menu">☰</button>
-            <a href="https://bypass.vip/" class="logo">
-                <img src="assets/img/favicon-nobg-light.png" alt="BYPASS.VIP" height="48">
-            </a>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <!--<li><a href="#">Userscript</a></li>-->
-                <li><a href="https://bypass.vip/supported-websites">Supported websites</a></li>
-                <li><a href="https://bypass.vip/premium">API (Premium)</a></li>
-                <li><a href="https://bypass.vip/discord" target="_blank">
-                        <svg class="discord-icon" width="20" height="20" viewBox="0 0 127.14 96.36" fill="currentColor">
-                            <path
-                                d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z" />
-                        </svg> Discord <svg class="external-link-icon" width="16" height="16" viewBox="0 0 24 24"
-                            fill="currentColor" style="transform: translateY(-2px);">
-                            <path
-                                d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" />
-                        </svg>
-                    </a></li>
-            </ul>
-            <button id="apiKeyButton" class="api-key-button" aria-label="Manage API Key">
-                🔑
-            </button>
-            <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
-                🌙
-            </button>
-        </nav>
-    </header>
-
-    <main>
-        <div class="content">
-            <h1>The #1 <span class="supported-websites">Ad-link</span> bypasser!</h1>
-            <div class="input-group">
-                <input type="text" id="bypassInput" placeholder="Enter your link here">
-                <div class="button-container">
-                    <button type="submit" id="submitButton">
-                        Bypass
-                    </button>
-                </div>
-            </div>
-
-            <div class="highlights-container">
-                <div class="highlight-box">
-                    <h2>🚀 Fast & Reliable</h2>
-                    <p>Bypass links instantly with our advanced system!</p>
-                    <p>With our custom coded API we can bypass advertisements on multiple websites.</p>
-                </div>
-                <div class="highlight-box">
-                    <h2>💯 100% Free</h2>
-                    <p>Our website is completely free to use, ensuring you can access all features without any cost.</p>
-                    <p>Enjoy unlimited access without hidden fees or subscriptions required!</p>
-                </div>
-                <div class="highlight-box">
-                    <h2>🌐 Multiple Supported Websites</h2>
-                    <p>We support a wide range of websites, including Linkvertise, Admaven, Paster.so, Work.ink, and
-                        more.</p>
-                    <p><a href="https://bypass.vip/supported-websites">See all supported websites</a></p>
-                </div>
-                <div class="highlight-box full-width">
-                    <h3>Some of our statistics ❤️</h3>
-                    <div class="stats-box">
-                        <div class="stat">
-                            <span class="stat-number">📈 15M+</span>
-                            <span class="stat-label">Links Bypassed</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-number">🔗 35+</span>
-                            <span class="stat-label">Supported Services</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-number">⏳ 3+</span>
-                            <span class="stat-label">Years of Service</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div class="container">
+        <h2>绕过 URL</h2>
+        <input type="text" id="urlInput" placeholder="在此输入 URL">
+        <div class="button-group">
+            <button onclick="bypassUrl()">绕过</button>
+            <button onclick="clearFields()">清空</button>
+            <button onclick="navigateToResponse()">转到响应</button>
+            <button onclick="copyOutput()">复制</button>
+            <button onclick="pasteFromClipboard()">粘贴</button> <!-- 新增粘贴按钮 -->
         </div>
-    </main>
-
-    <footer>
-        <p>&copy; 2024 Bypass.vip - Updated on 05/12/2024 | <a href="https://bypass.vip/terms-of-service">TOS</a> | <a href="https://bypass.vip/privacy-policy">Privacy Policy</a> | 
-            <a href="/cdn-cgi/l/email-protection#076f75476c7e742960667e">
-                <svg class="email-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path
-                        d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
-                </svg>
-                <span class="__cf_email__" data-cfemail="620a1022091b114c05031b">[email&#160;protected]</span>
-            </a> |
-            <a href="https://bypass.vip/discord" target="_blank">
-                <svg class="discord-icon" width="20" height="20" viewBox="0 0 127.14 96.36" fill="currentColor">
-                    <path
-                        d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z" />
-                </svg> Discord <svg class="external-link-icon" width="16" height="16" viewBox="0 0 24 24"
-                    fill="currentColor">
-                    <path
-                        d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" />
-                </svg></a>
-        </p>
-    </footer>
-
-    <div class="overlay" id="overlay"></div>
-    <div class="popup" id="popup">
-        <div class="popup-content">
-            <div class="popup-header">
-                <h4>Result</h4>
-                <button class="close-popup" id="closePopup">X</button>
-            </div>
-            <div id="popup-body" class="popup-body">
-
-            </div>
-        </div>
-        <div class="key-buttons">
-            <button id="copyContent">Copy</button>
-            <button id="openLink">Open</button>
-        </div>
+        <textarea id="output" rows="5" cols="50" readonly placeholder="绕过后的 URL 将显示在此处..."></textarea>
+        
+        <!-- 添加音乐播放器 -->
+        <audio id="audioPlayer" controls autoplay loop>
+            <source src="https://raw.githubusercontent.com/FCSDSSS/c/main/当羞涩不再禁锢_清流也是一种罪-张志成-387944592-320.mp3" type="audio/mpeg">
+            您的浏览器不支持音频播放。
+        </audio>
     </div>
 
-    <div class="overlay" id="keyOverlay"></div>
-    <div class="popup" id="keyPopup">
-        <div class="popup-content">
-            <div class="popup-header">
-                <h4>API Key</h4>
-                <button class="close-popup" id="closeKeyPopup">X</button>
-            </div>
-            <div class="popup-body">
-                <input type="password" id="apiKeyInput" placeholder="Enter your API key">
-                <div class="refresh-toggle">
-                    <label>
-                        <input type="checkbox" id="refreshToggle">
-                        Refresh results
-                    </label>
-                </div>
-            </div>
-        </div>
-        <div class="key-buttons">
-            <button id="saveKeyButton">Save Key</button>
-            <button id="clearKeyButton">Clear Key</button>
-        </div>
-        <p id="keyStatus" class="key-status"></p>
-    </div>
+    <script>
+        async function bypassUrl() {
+            const urlInput = document.getElementById('urlInput').value;
+            const output = document.getElementById('output');
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="assets/js/scripts.js" type="9fa6e925dd9d2c7b0c09aac8-text/javascript"></script>
-    <script src="assets/js/bypass.js" type="9fa6e925dd9d2c7b0c09aac8-text/javascript"></script>
-<script src="/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js" data-cf-settings="9fa6e925dd9d2c7b0c09aac8-|49" defer></script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"916700bff899b433","version":"2025.1.0","r":1,"token":"106633be4c2e41f888744e5eaddd33bb","serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}}}' crossorigin="anonymous"></script>
+            if (!urlInput) {
+                alert('请先输入一个 URL。');
+                return;
+            }
+
+            try {
+                // 调用 API
+                const apiUrl = `https://iwoozie.baby/api/free/bypass?url=${encodeURIComponent(urlInput)}`;
+                const response = await fetch(apiUrl);
+
+                if (!response.ok) {
+                    throw new Error(`API 请求失败: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                // 假设 API 返回的 URL 在 "url" 字段中
+                if (data.url) {
+                    // 清理 URL，去掉后面的 "success"、"true" 和引号等无关内容
+                    const cleanedUrl = cleanUrl(data.url);
+                    output.value = cleanedUrl;
+                } else {
+                    // 如果字段名不是 "url"，尝试从 JSON 数据中查找 URL
+                    const urlRegex = /https?:\/\/[^\s"]+/; // 匹配 URL 的正则表达式
+                    const urlMatch = JSON.stringify(data).match(urlRegex);
+
+                    if (urlMatch) {
+                        // 清理 URL，去掉后面的 "success"、"true" 和引号等无关内容
+                        const cleanedUrl = cleanUrl(urlMatch[0]);
+                        output.value = cleanedUrl;
+                    } else {
+                        throw new Error('未找到绕过后的 URL。');
+                    }
+                }
+            } catch (error) {
+                output.value = `错误: ${error.message}`;
+            }
+        }
+
+        function cleanUrl(url) {
+            // 去掉 URL 后面的 "success"、"true" 和引号等无关内容
+            return url.replace(/["\s,].*$/, ''); // 去掉引号、空格和逗号及其后面的内容
+        }
+
+        function clearFields() {
+            document.getElementById('urlInput').value = '';
+            document.getElementById('output').value = '';
+        }
+
+        function navigateToResponse() {
+            const output = document.getElementById('output').value;
+
+            if (output && output.startsWith('http')) {
+                window.open(output, '_blank'); // 在新标签页中打开 URL
+            } else {
+                alert('未找到有效的 URL，请先点击“绕过”按钮。');
+            }
+        }
+
+        function copyOutput() {
+            const output = document.getElementById('output').value;
+
+            if (output && output.startsWith('http')) {
+                navigator.clipboard.writeText(output)
+                    .then(() => {
+                        alert('URL 已复制到剪贴板！');
+                    })
+                    .catch(() => {
+                        alert('复制失败，请手动复制。');
+                    });
+            } else {
+                alert('没有可复制的 URL，请先点击“绕过”按钮。');
+            }
+        }
+
+        // 新增粘贴函数
+        async function pasteFromClipboard() {
+            try {
+                const text = await navigator.clipboard.readText(); // 读取剪切板内容
+                document.getElementById('urlInput').value = text; // 将内容粘贴到输入框
+            } catch (error) {
+                alert('无法读取剪切板内容，请手动粘贴。');
+            }
+        }
+
+        // 如果音频没有自动播放，用户点击页面后开始播放
+        const audioPlayer = document.getElementById('audioPlayer');
+        document.body.addEventListener('click', () => {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+            }
+        });
+    </script>
 </body>
-
 </html>
