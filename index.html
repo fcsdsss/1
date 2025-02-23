@@ -1,227 +1,35 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>绕过 API</title>
-    <!-- 样式部分保持不变 -->
-    <style>
-        body {
-            background-color: #000;
-            color: #fff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        .container {
-            width: 80%;
-            max-width: 800px;
-            text-align: center;
-        }
-
-        h2 {
-            font-size: 2.5em;
-            margin-bottom: 30px;
-            color: transparent; /* 文本颜色设置为透明 */
-            background: linear-gradient(90deg, #64b5f6, #fff, #64b5f6); /* 蓝白渐变 */
-            background-size: 200% 100%; /* 背景大小 */
-            background-clip: text; /* 裁剪背景到文本区域 */
-            -webkit-background-clip: text; /* 兼容 Safari */
-            animation: gradientAnimation 3s linear infinite; /* 添加动画 */
-        }
-
-        @keyframes gradientAnimation {
-            0% {
-                background-position: 100% 0; /* 背景起始位置 */
-            }
-            100% {
-                background-position: -100% 0; /* 背景结束位置 */
-            }
-        }
-
-        #urlInput {
-            width: 100%;
-            padding: 15px;
-            font-size: 1.2em;
-            margin: 20px 0;
-            background: #333;
-            border: 1px solid #444;
-            color: #fff;
-            border-radius: 5px;
-        }
-
-        .button-group {
-            margin: 30px 0;
-            gap: 20px;
-            display: flex;
-            justify-content: center;
-        }
-
-        button {
-            padding: 15px 30px;
-            font-size: 1.1em;
-            background: #555;
-            color: #fff;
-            border: 2px solid #777;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-            box-shadow: 0 0 8px rgba(119, 119, 119, 0.3);
-        }
-
-        button:hover {
-            background: #777;
-            border-color: #999;
-            box-shadow: 0 0 12px rgba(153, 153, 153, 0.5);
-        }
-
-        button:active {
-            transform: scale(0.95);
-            background: #444;
-            box-shadow: 0 0 6px rgba(119, 119, 119, 0.5);
-        }
-
-        #output {
-            width: 100%;
-            padding: 20px;
-            font-size: 1.1em;
-            background: #333;
-            border: 1px solid #444;
-            color: #fff;
-            border-radius: 5px;
-            margin-top: 20px;
-            min-height: 150px;
-        }
-
-        audio {
-            width: 100%;
-            margin-top: 20px;
-        }
-    </style>
+    <title>Bypass API</title>
 </head>
 <body>
-    <div class="container">
-        <h2>绕过 URL</h2>
-        <input type="text" id="urlInput" placeholder="在此输入 URL">
-        <div class="button-group">
-            <button onclick="bypassUrl()">绕过</button>
-            <button onclick="clearFields()">清空</button>
-            <button onclick="navigateToResponse()">转到响应</button>
-            <button onclick="copyOutput()">复制</button>
-            <button onclick="pasteFromClipboard()">粘贴</button> <!-- 新增粘贴按钮 -->
-        </div>
-        <textarea id="output" rows="5" cols="50" readonly placeholder="绕过后的 URL 将显示在此处..."></textarea>
-        
-        <!-- 添加音乐播放器 -->
-        <audio id="audioPlayer" controls autoplay loop>
-            <source src="https://raw.githubusercontent.com/FCSDSSS/c/main/当羞涩不再禁锢_清流也是一种罪-张志成-387944592-320.mp3" type="audio/mpeg">
-            您的浏览器不支持音频播放。
-        </audio>
-    </div>
+    <h2>Bypass URL</h2>
+    <input type="text" id="urlInput" placeholder="Enter URL here">
+    <br><br>
+    <button onclick="bypassUrl()">Bypass</button>
+    <br><br>
+    <textarea id="output" rows="5" cols="50" readonly placeholder="API response will appear here..."></textarea>
 
     <script>
-        async function bypassUrl() {
-            const urlInput = document.getElementById('urlInput').value;
-            const output = document.getElementById('output');
-
-            if (!urlInput) {
-                alert('请先输入一个 URL。');
-                return;
-            }
-
-            try {
-                // 调用 API
-                const apiUrl = `https://iwoozie.baby/api/free/bypass?url=${encodeURIComponent(urlInput)}`;
-                const response = await fetch(apiUrl);
-
-                if (!response.ok) {
-                    throw new Error(`API 请求失败: ${response.statusText}`);
-                }
-
-                const data = await response.json();
-
-                // 假设 API 返回的 URL 在 "url" 字段中
-                if (data.url) {
-                    // 清理 URL，去掉后面的 "success"、"true" 和引号等无关内容
-                    const cleanedUrl = cleanUrl(data.url);
-                    output.value = cleanedUrl;
-                } else {
-                    // 如果字段名不是 "url"，尝试从 JSON 数据中查找 URL
-                    const urlRegex = /https?:\/\/[^\s"]+/; // 匹配 URL 的正则表达式
-                    const urlMatch = JSON.stringify(data).match(urlRegex);
-
-                    if (urlMatch) {
-                        // 清理 URL，去掉后面的 "success"、"true" 和引号等无关内容
-                        const cleanedUrl = cleanUrl(urlMatch[0]);
-                        output.value = cleanedUrl;
-                    } else {
-                        throw new Error('未找到绕过后的 URL。');
-                    }
-                }
-            } catch (error) {
-                output.value = `错误: ${error.message}`;
-            }
+    function bypassUrl() {
+        const url = document.getElementById('urlInput').value;
+        if (url) {
+            const apiUrl = `http://fi4.bot-hosting.net:22869/bypass?url=${encodeURIComponent(url)}`;
+            fetch(apiUrl)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('output').value = data;
+                })
+                .catch(error => {
+                    document.getElementById('output').value = 'An error occurred: ' + error.message;
+                });
+        } else {
+            document.getElementById('output').value = 'Please enter a URL';
         }
-
-        function cleanUrl(url) {
-            // 去掉 URL 后面的 "success"、"true" 和引号等无关内容
-            return url.replace(/["\s,].*$/, ''); // 去掉引号、空格和逗号及其后面的内容
-        }
-
-        function clearFields() {
-            document.getElementById('urlInput').value = '';
-            document.getElementById('output').value = '';
-        }
-
-        function navigateToResponse() {
-            const output = document.getElementById('output').value;
-
-            if (output && output.startsWith('http')) {
-                window.open(output, '_blank'); // 在新标签页中打开 URL
-            } else {
-                alert('未找到有效的 URL，请先点击“绕过”按钮。');
-            }
-        }
-
-        function copyOutput() {
-            const output = document.getElementById('output').value;
-
-            if (output && output.startsWith('http')) {
-                navigator.clipboard.writeText(output)
-                    .then(() => {
-                        alert('URL 已复制到剪贴板！');
-                    })
-                    .catch(() => {
-                        alert('复制失败，请手动复制。');
-                    });
-            } else {
-                alert('没有可复制的 URL，请先点击“绕过”按钮。');
-            }
-        }
-
-        // 新增粘贴函数
-        async function pasteFromClipboard() {
-            try {
-                const text = await navigator.clipboard.readText(); // 读取剪切板内容
-                document.getElementById('urlInput').value = text; // 将内容粘贴到输入框
-            } catch (error) {
-                alert('无法读取剪切板内容，请手动粘贴。');
-            }
-        }
-
-        // 如果音频没有自动播放，用户点击页面后开始播放
-        const audioPlayer = document.getElementById('audioPlayer');
-        document.body.addEventListener('click', () => {
-            if (audioPlayer.paused) {
-                audioPlayer.play();
-            }
-        });
+    }
     </script>
 </body>
 </html>
